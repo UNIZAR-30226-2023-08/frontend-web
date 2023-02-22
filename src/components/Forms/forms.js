@@ -22,7 +22,7 @@ function MyTextInput({ label, ...props }) {
     <>
       <label
         htmlFor={props.id || props.name}
-        className=" mt-2 text-lg text-dark dark:text-gray-200"
+        className=" mt-4 text-lg text-dark dark:text-gray-200"
       >
         {label}
       </label>
@@ -46,7 +46,10 @@ function MyCheckbox({ children, ...props }) {
   const [field, meta] = useField({ ...props, type: "checkbox" });
   return (
     <>
-      <label className="my-2 text-md checkbox text-dark dark:text-gray-200">
+      <label
+        className="my-6 text-md checkbox text-dark dark:text-gray-200"
+        htmlFor={props.id || props.name}
+      >
         <input {...field} {...props} type="checkbox" />
         {children}
       </label>
@@ -121,7 +124,7 @@ export function RegisterForm() {
             placeholder="Fernando Alonso"
           />
           <MyTextInput
-            label="Nombre de usuairo"
+            label="Nombre de usuario"
             name="usuario"
             type="text"
             placeholder="fernandoalo"
@@ -140,7 +143,7 @@ export function RegisterForm() {
             <option value="other">Other</option>
           </MySelect> */}
           <MyCheckbox name="acceptedTerms">
-            Acepto los{" "}
+            &ensp;Acepto los&nbsp;
             <a
               className="text-primary-600 dark:text-primary-300 hover:underline"
               href="unizar.es"
