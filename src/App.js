@@ -1,10 +1,15 @@
-import logo from './logo.svg';
-import './App.css';
-import GamePage from './views/GamePage/GamePage';
+// import logo from "./logo.svg";
+import "./App.css";
+// import LoginPage from "./views/LoginPage/loginPage";
+// import GamePage from "./views/GamePage/GamePage";
+import { RegisterPage } from "./views/RegisterPage/RegisterPage";
 
 function App() {
+  document.body.classList.add("bg-gray-200");
+  document.body.classList.add("dark:bg-gray-600");
   return (
-    <GamePage></GamePage>
+    <RegisterPage></RegisterPage>
+    // <GamePage></GamePage>
     // <div className="App">
     //   <header className="App-header">
     //     <img src={logo} className="App-logo" alt="logo" />
