@@ -1,14 +1,21 @@
 // import logo from "./logo.svg";
 import "./App.css";
+import { LoginPage } from "./views/LoginPage/loginPage";
+import { RegisterPage } from "./views/RegisterPage/RegisterPage";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 // import LoginPage from "./views/LoginPage/loginPage";
 // import GamePage from "./views/GamePage/GamePage";
-import { RegisterPage } from "./views/RegisterPage/RegisterPage";
 
 function App() {
   document.body.classList.add("bg-gray-200");
   document.body.classList.add("dark:bg-gray-600");
   return (
-    <RegisterPage></RegisterPage>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+      </Routes>
+    </BrowserRouter>
     // <GamePage></GamePage>
     // <div className="App">
     //   <header className="App-header">

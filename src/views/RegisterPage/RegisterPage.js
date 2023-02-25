@@ -1,4 +1,5 @@
 import { Formik, Form } from "formik";
+import { Link } from "react-router-dom";
 import { MyCheckbox, MyTextInput } from "../../components/Forms/forms";
 import * as Yup from "yup";
 
@@ -8,8 +9,12 @@ import * as Yup from "yup";
  */
 export function RegisterPage() {
   return (
-    <div className='flex h-[80vh] flex-col justify-center items-center'>
-      <img className="mb-4" src="https://via.placeholder.com/150 " alt="placeholder"/>
+    <div className="flex h-[80vh] flex-col justify-center items-center">
+      <img
+        className="mb-4"
+        src="https://via.placeholder.com/150 "
+        alt="placeholder"
+      />
       <Formik
         initialValues={{
           nombre: "",
@@ -74,7 +79,7 @@ export function RegisterPage() {
             &ensp;Acepto los&nbsp;
             <a
               className="text-primary-600 dark:text-primary-300 hover:underline"
-              href="unizar.es"
+              href="https://unizar.es"
             >
               términos y condiciones
             </a>
@@ -88,6 +93,15 @@ export function RegisterPage() {
           >
             Confirmar
           </button>
+          <p className="mt-4 text-md checkbox text-dark dark:text-gray-200">
+            ¿Ya tienes cuenta?&ensp;
+            <Link
+              to="/login"
+              className="text-primary-600 dark:text-primary-300 hover:underline"
+            >
+              Inicia sesión
+            </Link>
+          </p>
         </Form>
       </Formik>
     </div>
