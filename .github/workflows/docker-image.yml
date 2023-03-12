@@ -46,6 +46,8 @@ jobs:
         with:
           image: "frontend-web-proysw:latest"
 
-      - name: Copying files
+      - name: Send image over scp
         run: scp "${{ steps.img_download.outputs.download_path }}" ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/tmp/docker_img
 
+      - name: Load image
+        run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} docker load -i /tmp/docker_img && rm /tmp/docker_img
