@@ -10,25 +10,25 @@ on:
 
 jobs:
 
-  build:
+#  build:
+#
+#   runs-on: ubuntu-latest
 
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-    
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag frontend-web-proysw:latest
-      
-    - uses: ishworkh/docker-image-artifact-upload@v1
-      name: Upload image
-      with:
-        image: "frontend-web-proysw:latest"
+#    steps:
+#    - name: Checkout
+#      uses: actions/checkout@v3
+#    
+#    - name: Build the Docker image
+#      run: docker build . --file Dockerfile --tag frontend-web-proysw:latest
+#      
+#    - uses: ishworkh/docker-image-artifact-upload@v1
+#      name: Upload image
+#      with:
+#        image: "frontend-web-proysw:latest"
 
   deploy:
     runs-on: ubuntu-latest
-    needs: build
+ #   needs: build
 
     steps:
       - name: Install SSH Key
@@ -47,5 +47,5 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Copying files
-        run: docker save frontend-web-proysw:latest | ssh -l ${{secrets.SSH_USER }} ${{ secrets.SSH_HOST }} docker load
+        run: docker save frontend-web-proysw:latest | ssh -l ${{ secrets.SSH_USER }} ${{ secrets.SSH_HOST }} docker load
 
