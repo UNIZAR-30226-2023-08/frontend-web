@@ -47,5 +47,5 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Copying files
-        run: docker save frontend-web-proysw:latest | bzip2 | ssh ${{secrets.SSH_USER }}@${{ secrets.SSH_HOST }} docker load
+        run: docker save frontend-web-proysw:latest | ssh ${{secrets.SSH_USER }}@${{ secrets.SSH_HOST }} docker load
 
