@@ -44,6 +44,7 @@ jobs:
         uses: ishworkh/docker-image-artifact-download@v1
         with:
           image: "frontend-web-proysw:latest"
+          download_path: /tmp/docker_img
 
       - name: Copying files
         run: scp /tmp/docker_img ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/tmp/docker_img
