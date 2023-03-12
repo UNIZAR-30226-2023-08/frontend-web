@@ -47,5 +47,5 @@ jobs:
           image: "frontend-web-proysw:latest"
 
       - name: Copying files
-        run: scp "${{ steps.img_download.outputs.download_path }}" ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/tmp/docker_img
+        run: scp "${{ steps.img_download.outputs.download_path }}" ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/tmp/docker_img
 
