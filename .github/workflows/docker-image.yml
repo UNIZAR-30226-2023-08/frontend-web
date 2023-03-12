@@ -15,12 +15,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3
+    
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag frontend-web-proysw:latest
       
     - uses: ishworkh/docker-image-artifact-upload@v1
-    - name: Upload image
+      name: Upload image
       with:
         image: "frontend-web-proysw:latest"
 
