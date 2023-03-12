@@ -26,4 +26,25 @@ jobs:
       with:
         image: "frontend-web-proysw:latest"
 
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }} 
+          known_hosts: 'placeholder'
+        
+      - name: Adding Known Hosts
+        run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Download image
+        uses: ishworkh/docker-image-artifact-download@v1
+        with:
+          image: "frontend-web-proysw:latest"
+
+      # Runs a single command using the runners shell
+      - name: Copying files
+        run: docker save frontend-web-proysw:latest | bzip2 | ssh ${{secrets.SSH_USER }}@${{ secrets.SSH_HOST }} docker load
 
