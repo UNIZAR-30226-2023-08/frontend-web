@@ -1,6 +1,6 @@
 // import logo from "./logo.svg";
 import "./App.css";
-import { Test } from "./views/Test";
+// import { Test } from "./views/Test";
 import { LoginPage } from "./views/LoginPage/loginPage";
 import { GamePage } from "./views/GamePage/GamePage";
 import { RegisterPage } from "./views/RegisterPage/RegisterPage";
