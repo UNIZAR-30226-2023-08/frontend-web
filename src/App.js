@@ -29,7 +29,7 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/waiting" element={<WaitingRoomPage />} />
           <Route path="/game" element={<GamePage />} />
-          <Route path="/test" element={<Test />} />
+          {/* <Route path="/test" element={<Test />} /> */}
         </Routes>
       </BrowserRouter>
     </ThemeContext.Provider>
