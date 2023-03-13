@@ -50,4 +50,7 @@ jobs:
         run: scp "${{ steps.img_download.outputs.download_path }}" ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/tmp/docker_img
 
       - name: Load image
-        run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} docker load -i /tmp/docker_img && rm /tmp/docker_img
+        run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} docker load -i /tmp/docker_img
+        
+      - name: Run
+        run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} docker run -d -p 3000:3000 "frontend-web-proysw:latest"
