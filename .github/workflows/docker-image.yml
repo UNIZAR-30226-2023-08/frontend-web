@@ -28,6 +28,7 @@ jobs:
 
   push:
     runs-on: ubuntu-latest
+    needs: build
     
     steps:
       - name: "Log in to Docker registry"
