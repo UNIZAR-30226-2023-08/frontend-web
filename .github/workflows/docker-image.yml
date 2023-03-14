@@ -16,12 +16,22 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
       
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    
     - name: Build Docker image
       uses: docker/build-push-action@v2
       with:
         context: .
-        push: false
+        push: true
         tags: ghcr.io/unizar-30226-2023-08/frontend-web-proysw:latest
+        
+
+   
    # - name: Build the Docker image
    #   run: docker build . --file Dockerfile --tag frontend-web-proysw:latest
       
@@ -30,27 +40,27 @@ jobs:
    #   with:
    #     image: "frontend-web-proysw:latest"
 
-  push:
-    runs-on: ubuntu-latest
-    permissions:
-      packages: write
-    needs: build
+  #push:
+  #  runs-on: ubuntu-latest
+  #  permissions:
+  #    packages: write
+  #  needs: build
     
-    steps:
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+  #  steps:
+  #   - name: Login to GitHub Container Registry
+  #      uses: docker/login-action@v1
+  #      with:
+  #        registry: ghcr.io
+  #       username: ${{ github.repository_owner }}
+  #       password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Push Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: true
-          tags: ghcr.io/unizar-30226-2023-08/frontend-web-proysw:latest
-          secrets: "github_token=${{ secrets.GITHUB_TOKEN }}" 
+  #   - name: Push Docker image
+  #     uses: docker/build-push-action@v2
+  #       with:
+  #        context: .
+  #        push: true
+  #        tags: ghcr.io/unizar-30226-2023-08/frontend-web-proysw:latest
+  #        secrets: "github_token=${{ secrets.GITHUB_TOKEN }}" 
 
 #- name: Download image
   #      id: img_download
