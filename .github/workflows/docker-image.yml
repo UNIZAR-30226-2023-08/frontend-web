@@ -8,7 +8,7 @@ on:
     
 jobs:
 
-  build:
+  build-and-push:
 
    runs-on: ubuntu-latest
 
@@ -23,7 +23,7 @@ jobs:
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
     
-    - name: Build Docker image
+    - name: Build and push Docker image
       uses: docker/build-push-action@v2
       with:
         context: .
