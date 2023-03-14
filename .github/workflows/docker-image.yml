@@ -6,8 +6,6 @@ on:
   pull_request:
     branches: [ "main", "rc" ]
     
-  workflow_dispatch:
-
 jobs:
 
   build:
@@ -21,10 +19,10 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag frontend-web-proysw:latest
       
-    #- uses: ishworkh/docker-image-artifact-upload@v1
-    #  name: Upload image
-    #  with:
-    #    image: "frontend-web-proysw:latest"
+    - uses: ishworkh/docker-image-artifact-upload@v1
+      name: Upload image
+      with:
+        image: "frontend-web-proysw:latest"
 
   push:
     runs-on: ubuntu-latest
@@ -34,9 +32,15 @@ jobs:
       - name: "Log in to Docker registry"
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
         
+      - name: Download image
+        id: img_download
+        uses: ishworkh/docker-image-artifact-download@v1
+        with:
+          image: "frontend-web-proysw:latest"
+        
       - name: "Push image"
         run: |
-          IMAGE_NAME=proysw-frontend-web
+          IMAGE_NAME=frontend-web-proysw
           IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
        
           # Change all uppercase to lowercase
@@ -69,11 +73,7 @@ jobs:
 #      - name: Adding Known Hosts
 #        run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 #
-#      - name: Download image
-#        id: img_download
-#        uses: ishworkh/docker-image-artifact-download@v1
-#        with:
-#          image: "frontend-web-proysw:latest"
+
 #
 #      - name: Send image over scp
 #        run: scp "${{ steps.img_download.outputs.download_path }}" ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/tmp/docker_img
