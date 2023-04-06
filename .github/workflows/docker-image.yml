@@ -1,0 +1,92 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main", "rc" ]
+  pull_request:
+    branches: [ "main", "rc" ]
+    
+jobs:
+
+  build:
+
+   runs-on: ubuntu-latest
+
+   steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag frontend-web-proysw:latest
+      
+    - uses: ishworkh/docker-image-artifact-upload@v1
+      name: Upload image
+      with:
+        image: "frontend-web-proysw:latest"
+
+  push:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    needs: build
+    
+    steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download image
+        id: img_download
+        uses: ishworkh/docker-image-artifact-download@v1
+        with:
+          image: "frontend-web-proysw:latest"
+        
+      - name: "Push image"
+        run: |
+          IMAGE_NAME=frontend-web-proysw
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
+       
+          # Change all uppercase to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$VERSION
+          
+#deploy:
+#    runs-on: ubuntu-latest
+#    needs: push
+#
+#    steps:
+#      - name: Install SSH Key
+#        uses: shimataro/ssh-key-action@v2
+#        with:
+#          key: ${{ secrets.SSH_PRIVATE_KEY }} 
+#          known_hosts: 'placeholder'
+#        
+#      - name: Adding Known Hosts
+#        run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+#
+
+#
+#      - name: Send image over scp
+#        run: scp "${{ steps.img_download.outputs.download_path }}" ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/tmp/docker_img
+#
+#      - name: Load image
+#        run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} docker load -i /tmp/docker_img
+#        
+#      - name: Run
+#        run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} docker run -d -p 3000:3000 "frontend-web-proysw:latest"
+#
