@@ -2,6 +2,9 @@
 import "./App.css";
 import { LoginPage } from "./views/LoginPage/loginPage";
 import { RegisterPage } from "./views/RegisterPage/RegisterPage";
+import { SearchPage } from "./views/SearchPage/SearchPage";
+import { Brackets } from "./views/BracketPage/Brackets";
+import { default as WinnersPage } from "./views/WinnersPage/WinnersPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 // import LoginPage from "./views/LoginPage/loginPage";
 // import GamePage from "./views/GamePage/GamePage";
@@ -14,6 +17,9 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/search" element={<SearchPage />} />
+        <Route path="/brackets" element={<Brackets />} />
+        <Route path="/winners" element={<WinnersPage />} />
       </Routes>
     </BrowserRouter>
     // <GamePage></GamePage>
