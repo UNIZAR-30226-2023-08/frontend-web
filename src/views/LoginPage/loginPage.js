@@ -10,28 +10,33 @@ export function LoginPage() {
 
   function onLogin(values, setSubmitting) {
     // setLoading(true);
-    // fetch("http://217.76.139.36:8000/login", {
-    //   method: "post",
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-Type": "application/json",
-    //   },
+    // TODO terminar
+    const body = {
+      username: "minombre",
+      password: "mipw"
+    }
 
-    //   //make sure to serialize your JSON body
-    //   body: JSON.stringify({
-    //     username: "minombre",
-    //     password: "mipassword",
-    //   }),
-    // })
-    //   .then((r) => console.log(r))
-    //   .finally(setLoading(false));
+    // Axios.post("/login", body 
+      // {method: "post",
+      // headers: {
+      //   Accept: "application/json",
+      //   "Content-Type": "application/json",
+      // },
 
-    setLoading(true);
-    setTimeout(() => {
-      alert(JSON.stringify(values, null, 2));
-      setLoading(false);
-      // setSubmitting(false);
-    }, 5000);
+      // //make sure to serialize your JSON body
+      // body: JSON.stringify({
+      //   username: "minombre",
+      //   password: "mipassword",
+      // }),}
+    // ).then((r) => console.log(r))
+      // .finally(setLoading(false));
+
+    // setLoading(true);
+    // setTimeout(() => {
+    //   alert(JSON.stringify(values, null, 2));
+    //   setLoading(false);
+    //   // setSubmitting(false);
+    // }, 5000);
     // setLoading(false);
   }
 

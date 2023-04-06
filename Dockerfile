@@ -5,8 +5,8 @@ WORKDIR /app
 RUN npm install -g serve
 
 # Instalacion de dependencias
-COPY ./package.json .
-RUN npm install
+ADD ./package*.json ./
+RUN npm ci
 
 COPY . .
 RUN npm run build

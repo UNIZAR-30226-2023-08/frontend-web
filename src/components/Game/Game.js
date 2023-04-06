@@ -3,19 +3,25 @@ import { ThemeContext } from "../../context/ThemeContext";
 
 export function HandCard({ value, selected, onSelect }) {
   const theme = useContext(ThemeContext)
+  let src = ""
+
+  if (value != null) {
+    src = theme[value.join("")]
+  }
+
   return (
     <img
       className={`${
         selected && "m-[-1px] border-4 border-secondary-400"
       } bg-transparent transition ease-in hover:-translate-y-1 hover:scale-125 duration-300 sm:max-h-[160px] lg:max-h-[200px]`}
       onClick={() => onSelect(value)}
-      src={theme[value]}
+      src={src}
     ></img>
   );
 }
 
-export function Hand({ myTurn=false }) {
-  const [hand, setHand] = useState(['1oros', '3oros', '5copas', '3espadas', '10espadas', '4bastos']);
+export function Hand({ hand, onPlay, myTurn=false }) {
+  // const [hand, setHand] = useState(['1oros', '3oros', '5copas', '3espadas', '10espadas', '4bastos']);
   const [selected, setSelected] = useState(null);
 
   return (
@@ -31,10 +37,11 @@ export function Hand({ myTurn=false }) {
         );
       })}
       <button
-        onClick={() =>
-          setTimeout(() => {
-            alert(JSON.stringify(selected, null, 2));
-          }, 400)
+        onClick={() => onPlay(selected)
+          // () =>
+          // setTimeout(() => {
+          //   alert(JSON.stringify(selected, null, 2));
+          // }, 400)
         }
         className={`ml-5 bg-primary-500 text-neutral-100 font-bold py-2 px-4 rounded-full ${!(selected && myTurn) && 'opacity-50 cursor-not-allowed  hover:bg-primary-700'}`}
         disabled={!(selected && myTurn)}
@@ -46,12 +53,13 @@ export function Hand({ myTurn=false }) {
 }
 
 export function Played({ playedCards }) {
+  console.log(playedCards)
   function placeCard(key){
     switch(key) {
-      case "j1": return "row-start-3 row-end-3 col-start-2 col-end-2"
-      case "j2": return "row-start-2 row-end-2 col-start-3 col-end-3 -rotate-90"
-      case "j3": return "row-start-1 row-end-1 col-start-2 col-end-2"
-      case "j4": return "row-start-2 row-end-2 col-start-1 col-end-1 rotate-90"
+      case "j0": return "row-start-3 row-end-3 col-start-2 col-end-2"
+      case "j1": return "row-start-2 row-end-2 col-start-3 col-end-3 -rotate-90"
+      case "j2": return "row-start-1 row-end-1 col-start-2 col-end-2"
+      case "j3": return "row-start-2 row-end-2 col-start-1 col-end-1 rotate-90"
     } 
   }
 
