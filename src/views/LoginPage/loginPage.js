@@ -29,7 +29,7 @@ export function LoginPage() {
       //   password: "mipassword",
       // }),}
     // ).then((r) => console.log(r))
-      // .finally(setLoading(false));
+      // .fi`nally(setLoading(false));
 
     // setLoading(true);
     // setTimeout(() => {
@@ -86,7 +86,7 @@ export function LoginPage() {
             Enviar
           </button>
           <BeatLoader className="mt-6 mb-4 self-center" loading={isLoading} />
-          <p className="text-md checkbox text-dark dark:text-gray-200">
+          <p className="mt-4 text-md checkbox text-dark dark:text-gray-200">
             ¿No tienes cuenta?&ensp;
             <Link
               to="/register"
