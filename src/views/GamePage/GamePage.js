@@ -2,6 +2,7 @@ import { Deck, Hand, Played } from "../../components/Game/Game";
 import { useState, useContext, useEffect } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
 import { UserContext } from "../../context/UserContext";
+import { BACKEND_URL, PLAYER_POS } from "../../config"
 
 let socket;
 let playerLocation;
@@ -27,12 +28,11 @@ export function GamePage() {
   const [hand, setHand] = useState(Array(6).fill(null));
 
   useEffect(() => {
-    var str = `ws://localhost:8000/partidaX/${username}`;
+    var str = `ws://${BACKEND_URL}/socket/1/${username}`;
     socket = new WebSocket(str);
 
     socket.onopen = () => {
-      socket.send(`${username} entra`);
-      console.log("ok");
+      console.log(`connected to ${str}`);
     };
 
     socket.onmessage = (m) => {
@@ -89,18 +89,15 @@ function handleMenssage(
     setTriunfo(message["Triunfo"].join(""));
     setTurn(message["Turno"]);
 
+    let played = {"j0" : null, "j1": null, "j2" : null, "j3" : null};
     for (var i = 0; i < 4; i++) {
-      if (message[i] !== null) {
-        message[i].join("");
+      if (message[i] !== undefined && message[i] !== null) {
+        console.log(i)
+        played[`j${i}`] = message[i].join("");
       }
     }
 
-    setPlayedCards({
-      j0: message["0"],
-      j1: message["1"],
-      j2: message["2"],
-      j3: message["3"],
-    });
+    setPlayedCards(played);
   }
 }
 

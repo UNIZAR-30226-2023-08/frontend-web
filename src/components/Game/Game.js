@@ -13,7 +13,7 @@ export function HandCard({ value, selected, onSelect }) {
     <img
       className={`${
         selected && "m-[-1px] border-4 border-secondary-400"
-      } bg-transparent transition ease-in hover:-translate-y-1 hover:scale-125 duration-300 sm:max-h-[160px] lg:max-h-[200px]`}
+      } bg-transparent transition ease-in hover:-translate-y-1 hover:scale-125 duration-300 sm:max-h-[160px] lg:max-h-[180px]`}
       onClick={() => onSelect(value)}
       src={src}
     ></img>
@@ -61,13 +61,13 @@ export function Played({ playedCards, playerNames }) {
   function placeCard(key) {
     switch (key) {
       case "j0":
-        return "row-start-3 row-end-3 col-start-2 col-end-2";
+        return "row-start-3 row-end-3 col-start-2 col-end-2 flex-col";
       case "j1":
-        return "row-start-2 row-end-2 col-start-3 col-end-3 -rotate-90";
+        return "row-start-2 row-end-2 col-start-3 col-end-3 -rotate-90 lg:flex-col";
       case "j2":
-        return "row-start-1 row-end-1 col-start-2 col-end-2";
+        return "row-start-1 row-end-1 col-start-2 col-end-2 flex-col";
       case "j3":
-        return "row-start-2 row-end-2 col-start-1 col-end-1 rotate-90";
+        return "row-start-2 row-end-2 col-start-1 col-end-1 rotate-90 flex-row-reverse lg:flex-col";
     }
   }
 
@@ -76,11 +76,11 @@ export function Played({ playedCards, playerNames }) {
       case "j0":
         return "pt-[20px]";
       case "j1":
-        return "rotate-90 pl-[100px]";
+        return "rotate-90 lg:pl-[100px]";
       case "j2":
         return "-order-1 pb-[20px]";
       case "j3":
-        return "-rotate-90 pr-[100px]";
+        return "-rotate-90 lg:pr-[100px]";
     }
   }
 
@@ -88,10 +88,10 @@ export function Played({ playedCards, playerNames }) {
   const cards = Object.keys(playedCards).map((key) => (
     <div
       key={key}
-      className={`flex flex-col justify-center items-center ${placeCard(key)}`}
+      className={`flex justify-center items-center ${placeCard(key)}`}
     >
       <img
-        className="sm:max-h-[200px] lg:max-h-[220px]"
+        className="sm:max-h-[180px] lg:max-h-[200px]"
         src={theme[playedCards[key]]}
       ></img>
       <p className={`font-bold text-xl text-primary-400 ${placeName(key)}`}>{playerNames[key]}</p>
@@ -108,7 +108,7 @@ export function Played({ playedCards, playerNames }) {
 export function Deck({ triunfo, show }) {
   const theme = useContext(ThemeContext);
   return (
-    <div className={show ? "flex justify-center items-center xs:row-start-1 lg:row-start-2" : "hidden"}>
+    <div className={show ? "flex justify-center items-center xs:row-start-2 mt-4 lg:mt-0 lg:row-start-2" : "hidden"}>
       <img
         className="sm:max-h-[150px] lg:max-h-[200px]"
         src={theme.dorso}
