@@ -35,7 +35,6 @@ function App() {
           <Route path="/game" element={<GamePage />} />
           <Route path="/search" element={<SearchPage />} />
           {/* <Route path="/brackets" element={<Brackets />} /> */}
-          {/* <Route path="/winners" element={<WinnersPage />} /> */}
           {/* <Route path="/test" element={<Test />} /> */}
         </Routes>
       </BrowserRouter>
