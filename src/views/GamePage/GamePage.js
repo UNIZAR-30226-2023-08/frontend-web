@@ -28,7 +28,7 @@ export function GamePage() {
   const [hand, setHand] = useState(Array(6).fill(null));
 
   useEffect(() => {
-    var str = `ws://${BACKEND_URL}/socket/1/${username}`;
+    var str = `ws://${BACKEND_URL}/partida2/${username}`;
     socket = new WebSocket(str);
 
     socket.onopen = () => {
@@ -76,12 +76,7 @@ function handleMenssage(
   }
 
   if (message["Cartas"] !== undefined) {
-    console.log("cartas");
-    console.log(message["Cartas"]);
     setHand(message["Cartas"]);
-
-  } else if (message === "espera") {
-    console.log("espera");
   
   } else if (message["Triunfo"] !== undefined) {
     console.log("mesa");
@@ -96,13 +91,10 @@ function handleMenssage(
         played[`j${i}`] = message[i].join("");
       }
     }
-
     setPlayedCards(played);
   }
 }
 
 function playCard(card) {
-  console.log(`N: ${card.join("-")} ${playerLocation} `);
-  socket.send(`N: ${card.join("-")} ${playerLocation} `);
-  console.log("ok");
+  socket.send(card.join("-"));
 }
