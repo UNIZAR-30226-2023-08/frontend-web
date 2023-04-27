@@ -8,6 +8,7 @@ import { SearchPage } from "./views/SearchPage/SearchPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { MainMenuPage } from "./views/MainMenuPage/MainMenuPage";
 import { WaitingRoomPage } from "./views/WaitingRoomPage/WaitingRoomPage";
+import { Winners } from "./views/WinnersPage/Winners";
 import { ThemeContext } from "./context/ThemeContext";
 import { getCardAsset, setTheme } from "./utils/themes";
 import themes from './assets/themes.json'
@@ -34,6 +35,7 @@ function App() {
           <Route path="/waiting" element={<WaitingRoomPage />} />
           <Route path="/game" element={<GamePage />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/winners" element={<Winners />} />
           {/* <Route path="/brackets" element={<Brackets />} /> */}
           {/* <Route path="/test" element={<Test />} /> */}
         </Routes>

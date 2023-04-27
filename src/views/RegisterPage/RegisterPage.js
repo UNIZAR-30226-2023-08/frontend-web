@@ -51,23 +51,25 @@ export function RegisterPage() {
       >
         <Form className="flex flex-col max-w-lg md:min-w-[50vw] sm:min-w-[80vw]">
           <MyTextInput
-            label="Nombre real"
-            name="nombre"
+              label="Correo electrónico"
+              name="email"
+              type="email"
+              placeholder="micuenta@mail.com"
+            />
+          
+          <MyTextInput
+            label="Nombre usuario"
+            name="usuario"
             type="text"
             placeholder="Fernando Alonso"
           />
-          <MyTextInput
-            label="Nombre de usuario"
-            name="usuario"
-            type="text"
-            placeholder="fernandoalo"
+           <MyTextInput
+            label="Contraseña"
+            name="passwd"
+            type="password"
+            placeholder="micontraseña33"
           />
-          <MyTextInput
-            label="Correo electrónico"
-            name="email"
-            type="email"
-            placeholder="micuenta@mail.com"
-          />
+
           {/* <MySelect label="Job Type" name="jobType">
             <option value="">Select a job type</option>
             <option value="designer">Designer</option>
