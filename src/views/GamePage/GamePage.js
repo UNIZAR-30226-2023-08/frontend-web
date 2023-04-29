@@ -2,10 +2,11 @@ import { Deck, Hand, Played } from "../../components/Game/Game";
 import { useState, useContext, useEffect } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
 import { UserContext } from "../../context/UserContext";
-import { BACKEND_URL, PLAYER_POS } from "../../config"
+import { BACKEND_URL, PLAYER_POS } from "../../config";
 
 let socket;
 let playerLocation;
+let state;
 
 export function GamePage() {
   const theme = useContext(ThemeContext);
@@ -26,10 +27,12 @@ export function GamePage() {
   const [triunfo, setTriunfo] = useState("1bastos");
   const [arrastre, setArrastre] = useState(false);
   const [hand, setHand] = useState(Array(6).fill(null));
+  const [allowed, setAllowed] = useState(Array(6).fill(null));
 
   useEffect(() => {
     var str = `ws://${BACKEND_URL}/partida2/${username}`;
     socket = new WebSocket(str);
+    state = "Nuevas";
 
     socket.onopen = () => {
       console.log(`connected to ${str}`);
@@ -37,7 +40,14 @@ export function GamePage() {
 
     socket.onmessage = (m) => {
       // console.log(m.data)
-      handleMenssage(m.data, setHand, setTriunfo, setPlayedCards, setTurn);
+      handleMenssage(
+        m.data,
+        setHand,
+        setAllowed,
+        setTriunfo,
+        setPlayedCards,
+        setTurn
+      );
     };
 
     socket.onclose = () => {
@@ -51,7 +61,12 @@ export function GamePage() {
     <div className="grid h-screen grid-rows-[1fr_3fr_1fr] grid-cols-[1fr_2fr_1fr]">
       <Deck triunfo={triunfo} show={!arrastre} />
       <Played playedCards={playedCards} playerNames={playerNames} />
-      <Hand hand={hand} myTurn={playerLocation === turn} onPlay={playCard} />
+      <Hand
+        hand={hand}
+        myTurn={playerLocation === turn}
+        allowed={allowed}
+        onPlay={playCard}
+      />
     </div>
   );
 }
@@ -59,6 +74,7 @@ export function GamePage() {
 function handleMenssage(
   raw_message,
   setHand,
+  setAllowed,
   setTriunfo,
   setPlayedCards,
   setTurn
@@ -70,6 +86,8 @@ function handleMenssage(
     message = raw_message;
   }
 
+  //TODO mensaje ganador baza
+
   if (message["Jugador"] !== undefined) {
     playerLocation = message["Jugador"];
     console.log(message["Jugador"]);
@@ -77,21 +95,38 @@ function handleMenssage(
 
   if (message["Cartas"] !== undefined) {
     setHand(message["Cartas"]);
-  
+
+    if (state === "Nuevas") {
+      console.log("allowed: all")
+      setAllowed(message["Cartas"]);
+    }
   } else if (message["Triunfo"] !== undefined) {
     console.log("mesa");
     console.log(message);
-    setTriunfo(message["Triunfo"].join(""));
+
+    if (message["Triunfo"] !== null) {
+      setTriunfo(message["Triunfo"].join(""));
+    } else {
+      setTriunfo(null);
+    }
     setTurn(message["Turno"]);
 
-    let played = {"j0" : null, "j1": null, "j2" : null, "j3" : null};
+    let played = { j0: null, j1: null, j2: null, j3: null };
     for (var i = 0; i < 4; i++) {
       if (message[i] !== undefined && message[i] !== null) {
-        console.log(i)
+        console.log(i);
         played[`j${i}`] = message[i].join("");
       }
     }
     setPlayedCards(played);
+  } else if (message["Cartas Posibles"] !== undefined) {
+    if (state === "Arrastre") {
+      console.log(`allowed: ${message["Cartas Posibles"]}`)
+      setAllowed(message["Cartas Posibles"]);
+    }
+  
+  } else if (message === "Arrastre") {
+    state = "Arrastre";
   }
 }
 

@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
 
-export function HandCard({ value, selected, onSelect }) {
+export function HandCard({ value, selected, allowed, onSelect }) {
   const theme = useContext(ThemeContext);
   let src = "";
 
@@ -11,8 +11,8 @@ export function HandCard({ value, selected, onSelect }) {
 
   return (
     <img
-      className={`${
-        selected && "m-[-1px] border-4 border-secondary-400"
+      className={`${selected && "m-[-1px] border-4 border-secondary-400"} ${
+        allowed ? "opacity-100" : "opacity-20 hover:cursor-not-allowed"
       } bg-transparent transition ease-in hover:-translate-y-1 hover:scale-125 duration-300 sm:max-h-[160px] lg:max-h-[180px]`}
       onClick={() => onSelect(value)}
       src={src}
@@ -20,29 +20,40 @@ export function HandCard({ value, selected, onSelect }) {
   );
 }
 
-export function Hand({ hand, onPlay, myTurn = false }) {
+export function Hand({ hand, onPlay, allowed, myTurn = false }) {
   // const [hand, setHand] = useState(['1oros', '3oros', '5copas', '3espadas', '10espadas', '4bastos']);
   const [selected, setSelected] = useState(null);
+  //TODO deshabilitar seleccionar en !allowed
+
+  let allowed_aux = allowed.map((item) =>
+    item !== null ? item.join("") : null
+  );
+
+  console.log(hand);
+  console.log(allowed);
+  console.log(allowed_aux);
 
   return (
     <div className="flex justify-center items-end m-3 col-start-1 col-end-4 row-start-3">
       {hand.map((card, index) => {
-        return (
+        let card_allowed = card && allowed_aux.includes(card.join(""));
+        return card !== null ? (
           <HandCard
             key={index}
             selected={card === selected}
+            allowed={card_allowed}
             value={card}
-            onSelect={() => setSelected(card)}
+            onSelect={
+              card_allowed
+                ? () => setSelected(card)
+                : () => {}
+            }
           />
-        );
+        ) : null;
       })}
       <button
         onClick={
           () => onPlay(selected)
-          // () =>
-          // setTimeout(() => {
-          //   alert(JSON.stringify(selected, null, 2));
-          // }, 400)
         }
         className={`ml-5 bg-primary-500 text-neutral-100 font-bold py-2 px-4 rounded-full ${
           !(selected && myTurn) &&
@@ -94,7 +105,9 @@ export function Played({ playedCards, playerNames }) {
         className="sm:max-h-[180px] lg:max-h-[200px]"
         src={theme[playedCards[key]]}
       ></img>
-      <p className={`font-bold text-xl text-primary-400 ${placeName(key)}`}>{playerNames[key]}</p>
+      <p className={`font-bold text-xl text-primary-400 ${placeName(key)}`}>
+        {playerNames[key]}
+      </p>
     </div>
   ));
 
@@ -108,9 +121,15 @@ export function Played({ playedCards, playerNames }) {
 export function Deck({ triunfo, show }) {
   const theme = useContext(ThemeContext);
   return (
-    <div className={show ? "flex justify-center items-center xs:row-start-2 mt-4 lg:mt-0 lg:row-start-2" : "hidden"}>
+    <div
+      className={
+        show
+          ? "flex justify-center items-center xs:row-start-2 mt-4 lg:mt-0 lg:row-start-2"
+          : "hidden"
+      }
+    >
       <img
-        className="sm:max-h-[150px] lg:max-h-[200px]"
+        className={`sm:max-h-[150px] lg:max-h-[200px] ${triunfo || "hidden"}`}
         src={theme.dorso}
       ></img>
       <img
