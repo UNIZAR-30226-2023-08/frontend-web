@@ -1,6 +1,8 @@
 // import { Test } from "./views/Test";
 import { LoginPage } from "./views/LoginPage/loginPage";
 import { GamePage } from "./views/GamePage/GamePage";
+import { GamePage2P } from "./views/GamePage/GamePage2";
+import { GamePage3P } from "./views/GamePage/GamePage3";
 import { RegisterPage } from "./views/RegisterPage/RegisterPage";
 import { SearchPage } from "./views/SearchPage/SearchPage";
 // import { Brackets } from "./views/BracketPage/Brackets";
@@ -36,6 +38,8 @@ function App() {
           <Route path="/game" element={<GamePage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/winners" element={<Winners />} />
+          <Route path="/game2" element={<GamePage2P />} />
+          <Route path="/game3" element={<GamePage3P />} />
           {/* <Route path="/brackets" element={<Brackets />} /> */}
           {/* <Route path="/test" element={<Test />} /> */}
         </Routes>

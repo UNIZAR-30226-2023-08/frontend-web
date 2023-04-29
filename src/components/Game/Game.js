@@ -139,3 +139,99 @@ export function Deck({ triunfo, show }) {
     </div>
   );
 }
+
+export function Played2Players({ playedCards, playerNames }) {
+  console.log(playedCards);
+  function placeCard(key) {
+    switch (key) {
+      case "j0":
+        return "row-start-3 row-end-3 col-start-2 col-end-2 flex-col";
+      case "j1":
+        return "row-start-1 row-end-1 col-start-2 col-end-2 flex-col";
+      default:
+        return "flex-col";
+    }
+  }
+
+  function placeName(key) {
+    switch (key) {
+      case "j0":
+        return "pt-[20px]";
+      case "j1":
+        return "-order-1 pb-[20px]";
+      default:
+        return "";
+    }
+  }
+
+  const theme = useContext(ThemeContext);
+  const cards = Object.keys(playedCards).map((key) => (
+    <div
+      key={key}
+      className={`flex justify-center items-center ${placeCard(key)}`}
+    >
+      <img
+        className="sm:max-h-[180px] lg:max-h-[200px]"
+        src={theme[playedCards[key]]}
+      ></img>
+      <p className={`font-bold text-xl text-primary-400 ${placeName(key)}`}>{playerNames[key]}</p>
+    </div>
+  ));
+
+  return (
+    <div className="grid grid-rows-2 grid-cols-3 col-start-2 col-end-2 row-start-2">
+      {cards}
+    </div>
+  ); //TODO refactor
+}
+
+export function Played3Players({ playedCards, playerNames }) {
+  console.log(playedCards);
+  function placeCard(key) {
+    switch (key) {
+      case "j0":
+        return "row-start-3 row-end-3 col-start-2 col-end-2 flex-col";
+      case "j1": 
+        return "row-start-2 row-end-2 col-start-3 col-end-3 -rotate-90 lg:flex-col";;
+      case "j2":
+        return "row-start-1 row-end-1 col-start-2 col-end-2 flex-col";
+      default:
+        return "flex-col";
+    }
+  }
+
+  function placeName(key) {
+    switch (key) {
+      case "j0":
+        return "pt-[20px]";
+      case "j1":
+        return "rotate-90 lg:pl-[100px]";
+      case "j2":
+        return "-order-1 pb-[20px]";
+      default:
+        return "";
+    }
+  }
+
+  const theme = useContext(ThemeContext);
+  const cards = Object.keys(playedCards).map((key) => (
+    <div
+      key={key}
+      className={`flex justify-center items-center ${placeCard(key)}`}
+    >
+      <img
+        className="sm:max-h-[180px] lg:max-h-[200px]"
+        src={theme[playedCards[key]]}
+      ></img>
+      <p className={`font-bold text-xl text-primary-400 ${placeName(key)}`}>{playerNames[key]}</p>
+    </div>
+  ));
+
+  return (
+    <div className="grid grid-rows-2 grid-cols-3 col-start-2 col-end-2 row-start-2">
+      {cards}
+    </div>
+  ); //TODO refactor
+}
+
+
