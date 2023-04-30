@@ -23,7 +23,6 @@ export function HandCard({ value, selected, allowed, onSelect }) {
 export function Hand({ hand, onPlay, allowed, myTurn = false }) {
   // const [hand, setHand] = useState(['1oros', '3oros', '5copas', '3espadas', '10espadas', '4bastos']);
   const [selected, setSelected] = useState(null);
-  //TODO deshabilitar seleccionar en !allowed
 
   let allowed_aux = allowed.map((item) =>
     item !== null ? item.join("") : null
