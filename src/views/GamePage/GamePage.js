@@ -5,7 +5,6 @@ import { ThemeContext } from "../../context/ThemeContext";
 import { UserContext } from "../../context/UserContext";
 import { BACKEND_URL } from "../../config";
 import { Navigate } from "react-router";
-import { useForceUpdate } from "../../utils/hooks"
 
 let socket;
 let playerLocation;
