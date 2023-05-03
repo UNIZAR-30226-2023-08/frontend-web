@@ -3,14 +3,13 @@ import { WaitingRoom } from "../WaitingRoom/WaitingRoom";
 import { useState, useContext, useEffect } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
 import { UserContext } from "../../context/UserContext";
-import { BACKEND_URL } from "../../config";
-import { Navigate, useLocation } from "react-router";
+import { useNavigate } from "react-router";
 
 let socket;
 let playerLocation;
 let state;
 
-export function Game({newGame}) {
+export function Game({ players, newGame, serverUrl, numJugadores }) {
   const theme = useContext(ThemeContext);
   const username = useContext(UserContext);
   const [turn, setTurn] = useState(-2);
@@ -20,21 +19,19 @@ export function Game({newGame}) {
     j2: null,
     j3: null,
   });
-  const [playerNames, setPlayernames] = useState({
-    j0: null,
-    j1: null,
-    j2: null,
-    j3: null,
-  });
+  const [playerNames, setPlayernames] = useState({});
   const [triunfo, setTriunfo] = useState(null);
   const [arrastre, setArrastre] = useState(false);
   const [hand, setHand] = useState(Array(6).fill(null));
   const [allowed, setAllowed] = useState(Array(6).fill(null));
-
   const [desconexion, setDesconexion] = useState(false);
+  const [trumpWinner, setTrumpWinner] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    var str = `ws://${BACKEND_URL}/partida2/${username}`;
+    console.log(`serverUrl ${serverUrl}`)
+    // var str = `ws://${BACKEND_URL}/partida4/${username}`;
+    var str = `ws://${serverUrl}`
     socket = new WebSocket(str);
     state = "Espera";
 
@@ -45,6 +42,7 @@ export function Game({newGame}) {
     socket.onmessage = (m) => {
       // console.log(m.data)
       handleMenssage(
+        players,
         m.data,
         setPlayernames,
         setHand,
@@ -52,26 +50,36 @@ export function Game({newGame}) {
         setTriunfo,
         setPlayedCards,
         setTurn,
-        setDesconexion
+        setDesconexion,
+        setTrumpWinner,
+        numJugadores
       );
     };
 
     socket.onclose = () => {
       console.log("Connection closed");
-      state = "Desconexion"
+      state = "Desconexion";
     };
+
+    // console.log(`NumJ ${numJugadores}`)
+    // const aux = {}
+    // for (var i = 0; i < numJugadores; i++) {
+    //   aux[`j${i}`] = null;
+    //   setPlayernames(aux); 
+    // }
   }, [newGame]);
-  
+
   if (desconexion === true) {
     state = "Espera";
-    return <Navigate replace to="/disconnect"/>
+    setDesconexion(false);
+    navigate("/disconnect");
   }
 
   console.log(`Turno:${turn}`);
   console.log(`Loc:${playerLocation}`);
-  console.log(`Estado: ${state}`)
+  console.log(`Estado: ${state}`);
   if (state === "Espera") {
-    return <WaitingRoom players={playerNames}></WaitingRoom>;
+    return <WaitingRoom players={playerNames}/>;
   }
 
   // if (state === "Desconexion") {
@@ -82,7 +90,11 @@ export function Game({newGame}) {
   return (
     <div className="grid h-screen grid-rows-[1fr_3fr_1fr] grid-cols-[1fr_2fr_1fr]">
       <Deck triunfo={triunfo} show={!arrastre} />
-      <Played playedCards={playedCards} playerNames={playerNames} />
+      <Played
+        playedCards={playedCards}
+        playerNames={playerNames}
+        trumpWinner={trumpWinner}
+      />
       <Hand
         hand={hand}
         myTurn={playerLocation === turn}
@@ -94,6 +106,7 @@ export function Game({newGame}) {
 }
 
 function handleMenssage(
+  players,
   raw_message,
   setPlayernames,
   setHand,
@@ -101,7 +114,9 @@ function handleMenssage(
   setTriunfo,
   setPlayedCards,
   setTurn,
-  setDesconexion
+  setDesconexion,
+  setTrumpWinner, 
+  numJugadores
 ) {
   let message;
   try {
@@ -110,20 +125,13 @@ function handleMenssage(
     message = raw_message;
   }
 
-  //TODO mensaje ganador baza
-
   if (state === "Espera") {
-    handleEspera(message, setPlayernames);
+    handleEspera(message, setPlayernames, numJugadores);
     return;
   }
 
   if (message["Desconexion"]) {
-    console.log("Desconexion");
-    state = "Desconexion";
-    if (socket.readyState === WebSocket.OPEN) {
-      socket.close()
-    }
-    setDesconexion(true);
+    handleDesconexion(setDesconexion);
     return;
   }
 
@@ -132,17 +140,22 @@ function handleMenssage(
     console.log(message["Jugador"]);
   }
 
+  if (message["Ganador"] !== undefined) {
+    setTrumpWinner(message["Ganador"]);
+  }
+
+  if (message === "Arrastre") {
+    state = "Arrastre";
+  }
+
   if (message["Cartas"] !== undefined) {
+    setTrumpWinner(null)
     setHand(message["Cartas"]);
 
     if (state === "Nuevas") {
-      console.log("allowed: all");
       setAllowed(message["Cartas"]);
     }
   } else if (message["Triunfo"] !== undefined) {
-    console.log("mesa");
-    console.log(message);
-
     if (message["Triunfo"] !== null) {
       setTriunfo(message["Triunfo"].join(""));
     } else {
@@ -159,32 +172,41 @@ function handleMenssage(
     setPlayedCards(played);
   } else if (message["Cartas Posibles"] !== undefined) {
     if (state === "Arrastre") {
-      console.log(`allowed: ${message["Cartas Posibles"]}`);
       setAllowed(message["Cartas Posibles"]);
     }
-  } else if (message === "Arrastre") {
-    state = "Arrastre";
   }
+  //TODO mensaje ganador baza
 }
 
 function playCard(card) {
   socket.send(card.join("-"));
 }
 
-function handleEspera(message, setPlayerNames) {
-  console.log("Handler espera")
+function handleEspera(message, setPlayerNames, numJugadores) {
+  console.log("Handler espera");
   if (message === "Comienza partida") {
     state = "Nuevas";
     return;
   }
 
-  let playerNames = { j0: null, j1: null, j2: null, j3: null };
-  for (var i = 0; i < 4; i++) {
+  const playerNames = {};
+  for (var i = 0; i < numJugadores; i++) {
     if (message[i] !== undefined && message[i] !== null) {
       console.log(i);
       playerNames[`j${i}`] = message[i];
+    } else {
+      playerNames[`j${i}`] = null;
     }
   }
   setPlayerNames(playerNames);
-  console.log(playerNames);
+}
+
+function handleDesconexion(setDesconexion) {
+  console.log("Desconexion");
+  state = "Desconexion";
+  if (socket.readyState === WebSocket.OPEN) {
+    socket.close();
+  }
+  setDesconexion(true);
+  return;
 }

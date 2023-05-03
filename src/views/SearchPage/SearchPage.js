@@ -1,19 +1,31 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ContenedorTorneo from './ContenedorTorneo';
 import ContenedorPartidaPublica from './ContenedorPartidaPublica';
 import ContenedorPartidaPrivada from './ContenedorPartidaPrivada';
+import { UserContext } from '../../context/UserContext';
+import { BACKEND_URL } from '../../config';
 
-export function SearchPage() {
+export function SearchPage({url, setUrl, startNewGame, numJugadores, setJugadores}) {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const navigate = useNavigate();
+    const username = useContext(UserContext)
+    
+    useEffect(() => {
+        setUrl(BACKEND_URL + '/partida4/' + username)
+        setJugadores(4);
+    }, [])
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
     };
 
-    const handleDropdownClick = (path) => {
-        navigate(path);
+    const handleDropdownClick = (seleccion) => {
+        console.log("Dropdown")
+        setUrl(BACKEND_URL + '/partida' + seleccion + '/' + username)
+        console.log("***" + BACKEND_URL + '/partida' + seleccion + '/' + username)
+        setIsDropdownOpen(false);
+        setJugadores(seleccion);
     };
 
     return (
@@ -34,7 +46,6 @@ export function SearchPage() {
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
                         >
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
@@ -48,19 +59,19 @@ export function SearchPage() {
                         <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
                             <li>
                                 <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" 
-                                   onClick={() => handleDropdownClick('/game2')}>
+                                   onClick={() => handleDropdownClick('2')}>
                                     Dos jugadores
                                 </a>
                             </li>
                             <li>
                                 <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                   onClick={() => handleDropdownClick('/game3')}>
+                                   onClick={() => handleDropdownClick('3')}>
                                     Tres jugadores
                                 </a>
                             </li>
                             <li>
                                 <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                   onClick={() => handleDropdownClick('/game')}>
+                                   onClick={() => handleDropdownClick('4')}>
                                     Cuatro jugadores
                                 </a>
                             </li>
@@ -71,7 +82,7 @@ export function SearchPage() {
             <h1 className="mt-20 mb-12 text-4xl font-bol text-center"> 
                 Seleccione tipo de partida </h1>
             <div className="flex justify-center">
-                <ContenedorPartidaPublica />
+                <ContenedorPartidaPublica startNewGame={startNewGame}/>
                 <ContenedorPartidaPrivada />
                 <ContenedorTorneo />
             </div>

@@ -42,18 +42,12 @@ export function Hand({ hand, onPlay, allowed, myTurn = false }) {
             selected={card === selected}
             allowed={card_allowed}
             value={card}
-            onSelect={
-              card_allowed
-                ? () => setSelected(card)
-                : () => {}
-            }
+            onSelect={card_allowed ? () => setSelected(card) : () => {}}
           />
         ) : null;
       })}
       <button
-        onClick={
-          () => onPlay(selected)
-        }
+        onClick={() => onPlay(selected)}
         className={`ml-5 bg-primary-500 text-neutral-100 font-bold py-2 px-4 rounded-full ${
           !(selected && myTurn) &&
           "opacity-50 cursor-not-allowed  hover:bg-primary-700"
@@ -66,12 +60,12 @@ export function Hand({ hand, onPlay, allowed, myTurn = false }) {
   );
 }
 
-export function Played({ playedCards, playerNames }) {
-  console.log(playedCards);
+export function Played({ playedCards, playerNames, trumpWinner }) {
+  console.log(`TW: ${trumpWinner}`)
   function placeCard(key) {
     switch (key) {
       case "j0":
-        return "row-start-3 row-end-3 col-start-2 col-end-2 flex-col";
+        return "row-start-3 row-end-3 col-start-2 col-end-2 flex-col"
       case "j1":
         return "row-start-2 row-end-2 col-start-3 col-end-3 -rotate-90 lg:flex-col";
       case "j2":
@@ -111,9 +105,12 @@ export function Played({ playedCards, playerNames }) {
   ));
 
   return (
-    <div className="grid grid-rows-3 grid-cols-3 col-start-2 col-end-2 row-start-2">
-      {cards}
-    </div>
+    <>
+      <div className="grid grid-rows-3 grid-cols-3 col-start-2 col-end-2 row-start-2">
+        {cards}
+      </div>
+      <p>Ganador baza {trumpWinner}</p>
+    </>
   ); //TODO refactor
 }
 
@@ -173,7 +170,9 @@ export function Played2Players({ playedCards, playerNames }) {
         className="sm:max-h-[180px] lg:max-h-[200px]"
         src={theme[playedCards[key]]}
       ></img>
-      <p className={`font-bold text-xl text-primary-400 ${placeName(key)}`}>{playerNames[key]}</p>
+      <p className={`font-bold text-xl text-primary-400 ${placeName(key)}`}>
+        {playerNames[key]}
+      </p>
     </div>
   ));
 
@@ -190,8 +189,8 @@ export function Played3Players({ playedCards, playerNames }) {
     switch (key) {
       case "j0":
         return "row-start-3 row-end-3 col-start-2 col-end-2 flex-col";
-      case "j1": 
-        return "row-start-2 row-end-2 col-start-3 col-end-3 -rotate-90 lg:flex-col";;
+      case "j1":
+        return "row-start-2 row-end-2 col-start-3 col-end-3 -rotate-90 lg:flex-col";
       case "j2":
         return "row-start-1 row-end-1 col-start-2 col-end-2 flex-col";
       default:
@@ -222,7 +221,9 @@ export function Played3Players({ playedCards, playerNames }) {
         className="sm:max-h-[180px] lg:max-h-[200px]"
         src={theme[playedCards[key]]}
       ></img>
-      <p className={`font-bold text-xl text-primary-400 ${placeName(key)}`}>{playerNames[key]}</p>
+      <p className={`font-bold text-xl text-primary-400 ${placeName(key)}`}>
+        {playerNames[key]}
+      </p>
     </div>
   ));
 
@@ -232,5 +233,3 @@ export function Played3Players({ playedCards, playerNames }) {
     </div>
   ); //TODO refactor
 }
-
-
