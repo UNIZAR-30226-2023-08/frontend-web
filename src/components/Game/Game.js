@@ -1,4 +1,5 @@
 import { Deck, Hand, Played } from "./GameComponents";
+import { Chat } from "../Chat/chat";
 import { WaitingRoom } from "../WaitingRoom/WaitingRoom";
 import { useState, useContext, useEffect } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
@@ -101,6 +102,7 @@ export function Game({ players, newGame, serverUrl, numJugadores }) {
         allowed={allowed}
         onPlay={playCard}
       />
+      <Chat/>
     </div>
   );
 }
