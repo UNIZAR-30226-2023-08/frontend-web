@@ -12,8 +12,8 @@ export default function ContenedorPartidaPublica({startNewGame}) {
   //   })
 
   return (
-    <div class=" flex-1 mx-10 flex-col flex items-center justify-center py-10 px-10 border-violet-400 border-2">
-      <h1 class="mb-6 text-xl font-bol text-center">  Partida pública
+    <div className=" flex-1 mx-10 flex-col flex items-center justify-center py-10 px-10 border-violet-400 border-2">
+      <h1 className="dark:text-white mb-6 text-xl font-bol text-center">  Partida pública
       </h1>
       <Link to="/game" state={{gameId: gameId}}>
       <button

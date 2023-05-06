@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 
 export default function ContenedorPartidaPrivada() {
   return (
-    <div class=" flex-1 mx-10 flex-col flex items-center justify-center py-10 px-10 w-320 border-violet-400 border-2">
-      <h1 class="mb-6 text-xl font-bol text-center">  Partida privada
+    <div className=" flex-1 mx-10 flex-col flex items-center justify-center py-10 px-10 w-320 border-violet-400 border-2">
+      <h1 className="dark:text-white mb-6 text-xl font-bol text-center">  Partida privada
       </h1>
       <Link to="/waiting"> 
         <button
