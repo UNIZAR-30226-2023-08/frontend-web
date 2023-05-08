@@ -5,6 +5,7 @@ import {
   MessageList,
   Message,
   MessageInput,
+  MessageSeparator,
 } from "@chatscope/chat-ui-kit-react";
 
 let socket;
@@ -38,15 +39,14 @@ export function Chat({ url, msgHistory, setMsgHistory }) {
       };
 
       socket.onmessage = (msg) => {
-        setMsgHistory((prev) => [...prev, msg.data])
+        setMsgHistory((prev) => [...prev, msg.data]);
         setNewMessage(true);
       };
-      socket.onclose = console.log("Chat closed")
+      socket.onclose = console.log("Chat closed");
       // handleMessage(msg.data, msgHistory, setMsgHistory, setNewMessage);
     } catch (e) {
       console.log(e);
     }
-
   }, [url]);
 
   console.log(msgHistory);
@@ -73,7 +73,8 @@ export function Chat({ url, msgHistory, setMsgHistory }) {
                     message: msg["message"],
                     sentTime: "15 mins ago",
                     sender: msg["username"],
-                    direction: (username === msg["username"] ? "outgoing" : "incoming"),
+                    direction:
+                      username == msg["username"] ? "outgoing" : "incoming",
                     position: "single",
                   }}
                 >
@@ -81,19 +82,19 @@ export function Chat({ url, msgHistory, setMsgHistory }) {
                 </Message>
               );
             } catch {
-              msg = e;
               return (
-                <Message
-                  model={{
-                    message: msg,
-                    sentTime: "15 mins ago",
-                    sender: "System",
-                    direction: "incoming",
-                    position: "single",
-                  }}
-                >
-                  <Message.Header sender="System" />
-                </Message>
+                <MessageSeparator>{e}</MessageSeparator>
+                // <Message
+                //   model={{
+                //     message: msg,
+                //     sentTime: "15 mins ago",
+                //     sender: "System",
+                //     direction: "incoming",
+                //     position: "single",
+                //   }}
+                // >
+                //   <Message.Header sender="System" />
+                // </Message>
               );
             }
 
