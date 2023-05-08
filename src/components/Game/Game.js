@@ -31,6 +31,9 @@ export function Game({ players, newGame, serverUrl, numJugadores }) {
   const [trumpWinner, setTrumpWinner] = useState(null);
   const navigate = useNavigate();
 
+  const [msgH, setMsgH] = useState([]);
+
+
   useEffect(() => {
     console.log(`serverUrl ${serverUrl}`);
     // var str = `ws://${BACKEND_URL}/partida4/${username}`;
@@ -92,6 +95,8 @@ export function Game({ players, newGame, serverUrl, numJugadores }) {
   //   console.log("Redirecting...")
   //   return <Navigate replace to="/disconnect"/>
   // }
+
+
   return (
     <div className="grid h-screen grid-rows-[1fr_3fr_1fr] grid-cols-[1fr_2fr_1fr]">
       <Deck triunfo={triunfo} show={!arrastre} />
@@ -106,7 +111,7 @@ export function Game({ players, newGame, serverUrl, numJugadores }) {
         allowed={allowed}
         onPlay={playCard}
       />
-      <Chat url={chatUrl} />
+      <Chat url={chatUrl} msgHistory={msgH} setMsgHistory={setMsgH} />
     </div>
   );
 }

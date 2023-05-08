@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../../context/UserContext";
 import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import {
   MessageList,
@@ -6,42 +7,49 @@ import {
   MessageInput,
 } from "@chatscope/chat-ui-kit-react";
 
-export function Chat({ url }) {
+let socket;
+
+export function Chat({ url, msgHistory, setMsgHistory }) {
   // return <img className="fixed bottom-0.5 right-0.5" src="/icons/chat.svg"/>
   const [showChat, setShowChat] = useState(false);
-  const [newMessage, setNewMessage] = useState(true); // TODO elevar al onmessage
-  let socket;
-  
+  const [newMessage, setNewMessage] = useState(false);
+  const username = useContext(UserContext);
+
   // TODO useEffect que resetee el listado cuando el socket cambie
+  useEffect(() => console.log("render", msgHistory));
+
   useEffect(() => {
     if (url === null || url === undefined) {
-      return
+      return;
     }
 
     try {
-      console.log(`chatUrl ${url}`)
-      socket = new WebSocket(`ws://${url}`)
-  
+      console.log(`chatUrl ${url}`);
+      socket = new WebSocket(`ws://${url}`);
+
       socket.onopen = () => {
-        console.log(`CHAT OK: connected to ${url}`);
+        console.log(`CHAT OK: ${username} connected to ${url}`);
+        try {
+          socket.send("test");
+          console.log("Test sent");
+        } catch (e) {
+          console.log(e);
+        }
       };
-  
-      socket.onmessage = (e) => console.log(e.data)
-    
+
+      socket.onmessage = (msg) => {
+        setMsgHistory((prev) => [...prev, msg.data])
+        setNewMessage(true);
+      };
+      socket.onclose = console.log("Chat closed")
+      // handleMessage(msg.data, msgHistory, setMsgHistory, setNewMessage);
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
 
-    try {
+  }, [url]);
 
-      socket.send("test")
-    } catch (e) {
-      console.log(e)
-    }
-
-  }, [url])
-
-
+  console.log(msgHistory);
   return (
     <>
       <div
@@ -52,54 +60,73 @@ export function Chat({ url }) {
         }
       >
         <MessageList
-        
           className="bg-neutral-400"
           style={{ height: "90%", borderRadius: "0.5rem" }}
         >
-          {Array(50)
-            .fill(null)
-            .map(() => (
-              <>
+          {msgHistory.map((e) => {
+            let msg;
+            try {
+              msg = JSON.parse(e);
+              return (
                 <Message
                   model={{
-                    message: "Hello my friend",
+                    message: msg["message"],
                     sentTime: "15 mins ago",
-                    sender: "Senso",
-                    direction: "outgoing",
+                    sender: msg["username"],
+                    direction: (username === msg["username"] ? "outgoing" : "incoming"),
                     position: "single",
                   }}
                 >
+                  <Message.Header sender={msg["username"]} />
                 </Message>
-
+              );
+            } catch {
+              msg = e;
+              return (
                 <Message
                   model={{
-                    message: "Hello my friend",
+                    message: msg,
                     sentTime: "15 mins ago",
-                    sender: "Eliot",
+                    sender: "System",
                     direction: "incoming",
                     position: "single",
                   }}
                 >
-                  <Message.Header sender="Eliot" />
+                  <Message.Header sender="System" />
                 </Message>
-              </>
-            ))}
+              );
+            }
+
+            // <>
+            //   <Message
+            //     model={{
+            //       message: "Hello my friend",
+            //       sentTime: "15 mins ago",
+            //       sender: "Senso",
+            //       direction: "outgoing",
+            //       position: "single",
+            //     }}
+            //   ></Message>
+            // </>;
+          })}
         </MessageList>
         <MessageInput
           className="fixed flex bottom-0 h-[60px]"
           onAttachClick={() => setShowChat(!showChat)}
           onSend={(a) => {
-            console.log(a);
-            // socket.send();
+            console.log("Sent", a);
+            socket.send(a);
           }}
-        />{" "}
+        />
       </div>
       <img
         src="/icons/chat.svg"
         className={
           showChat
             ? "hidden"
-            : `fixed bottom-1 right-1 hover:cursor-pointer ${newMessage && "animate-bounce"}`
+            : `fixed bottom-1 right-1 hover:cursor-pointer ${
+                newMessage && "animate-bounce"
+              }`
         }
         onClick={() => {
           setShowChat(!showChat);
