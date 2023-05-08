@@ -59,9 +59,12 @@ export function Chat({ url, msgHistory, setMsgHistory }) {
             : "hidden"
         }
       >
+        <button>
+          <img src="/icons/close.svg" onClick={() => setShowChat(!showChat)} />
+        </button>
         <MessageList
           className="bg-neutral-400"
-          style={{ height: "90%", borderRadius: "0.5rem" }}
+          style={{ height: "80%", borderRadius: "0.5rem" }}
         >
           {msgHistory.map((e) => {
             let msg;
@@ -112,8 +115,12 @@ export function Chat({ url, msgHistory, setMsgHistory }) {
           })}
         </MessageList>
         <MessageInput
-          className="fixed flex bottom-0 h-[60px]"
-          onAttachClick={() => setShowChat(!showChat)}
+          className="fixed flex bottom-0 h-[60px] pt-[20px] pl-[20px]"
+          style={{ paddingTop: "20px", paddingLeft: "20px" }}
+          fancyScroll={false}
+          // onAttachClick={() => setShowChat(!showChat)}
+          attachButton={false}
+          placeholder="Escribe tu mensaje aquí..."
           onSend={(a) => {
             console.log("Sent", a);
             socket.send(a);
