@@ -5,6 +5,7 @@ import { useState, useContext, useEffect } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
 import { UserContext } from "../../context/UserContext";
 import { useNavigate } from "react-router";
+import { BACKEND_URL, CHAT_ENDPOINT } from "../../config";
 
 let socket;
 let playerLocation;
@@ -13,6 +14,7 @@ let state;
 export function Game({ players, newGame, serverUrl, numJugadores }) {
   const theme = useContext(ThemeContext);
   const username = useContext(UserContext);
+  const [chatUrl, setChatUrl] = useState(null);
   const [turn, setTurn] = useState(-2);
   const [playedCards, setPlayedCards] = useState({
     j0: null,
@@ -30,14 +32,14 @@ export function Game({ players, newGame, serverUrl, numJugadores }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(`serverUrl ${serverUrl}`)
+    console.log(`serverUrl ${serverUrl}`);
     // var str = `ws://${BACKEND_URL}/partida4/${username}`;
-    var str = `ws://${serverUrl}`
+    var str = `ws://${serverUrl}`;
     socket = new WebSocket(str);
     state = "Espera";
 
     socket.onopen = () => {
-      console.log(`connected to ${str}`);
+      console.log(`GAME WS: connected to ${str}`);
     };
 
     socket.onmessage = (m) => {
@@ -53,6 +55,8 @@ export function Game({ players, newGame, serverUrl, numJugadores }) {
         setTurn,
         setDesconexion,
         setTrumpWinner,
+        setChatUrl,
+        username,
         numJugadores
       );
     };
@@ -66,7 +70,7 @@ export function Game({ players, newGame, serverUrl, numJugadores }) {
     // const aux = {}
     // for (var i = 0; i < numJugadores; i++) {
     //   aux[`j${i}`] = null;
-    //   setPlayernames(aux); 
+    //   setPlayernames(aux);
     // }
   }, [newGame]);
 
@@ -80,7 +84,7 @@ export function Game({ players, newGame, serverUrl, numJugadores }) {
   console.log(`Loc:${playerLocation}`);
   console.log(`Estado: ${state}`);
   if (state === "Espera") {
-    return <WaitingRoom players={playerNames}/>;
+    return <WaitingRoom players={playerNames} />;
   }
 
   // if (state === "Desconexion") {
@@ -102,7 +106,7 @@ export function Game({ players, newGame, serverUrl, numJugadores }) {
         allowed={allowed}
         onPlay={playCard}
       />
-      <Chat/>
+      <Chat url={chatUrl} />
     </div>
   );
 }
@@ -117,7 +121,9 @@ function handleMenssage(
   setPlayedCards,
   setTurn,
   setDesconexion,
-  setTrumpWinner, 
+  setTrumpWinner,
+  setChatUrl,
+  username,
   numJugadores
 ) {
   let message;
@@ -137,6 +143,11 @@ function handleMenssage(
     return;
   }
 
+  if (message["chat"]) {
+    setChatUrl(BACKEND_URL + CHAT_ENDPOINT + message["chat"] + '/' + username);
+    return;
+  }
+
   if (message["Jugador"] !== undefined) {
     playerLocation = message["Jugador"];
     console.log(message["Jugador"]);
@@ -151,7 +162,7 @@ function handleMenssage(
   }
 
   if (message["Cartas"] !== undefined) {
-    setTrumpWinner(null)
+    setTrumpWinner(null);
     setHand(message["Cartas"]);
 
     if (state === "Nuevas") {

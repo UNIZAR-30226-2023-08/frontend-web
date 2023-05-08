@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import {
   MessageList,
@@ -6,12 +6,41 @@ import {
   MessageInput,
 } from "@chatscope/chat-ui-kit-react";
 
-export function Chat({ socket = null }) {
+export function Chat({ url }) {
   // return <img className="fixed bottom-0.5 right-0.5" src="/icons/chat.svg"/>
-  const [showChat, setShowChat] = useState(true);
+  const [showChat, setShowChat] = useState(false);
   const [newMessage, setNewMessage] = useState(true); // TODO elevar al onmessage
-
+  let socket;
+  
   // TODO useEffect que resetee el listado cuando el socket cambie
+  useEffect(() => {
+    if (url === null || url === undefined) {
+      return
+    }
+
+    try {
+      console.log(`chatUrl ${url}`)
+      socket = new WebSocket(`ws://${url}`)
+  
+      socket.onopen = () => {
+        console.log(`CHAT OK: connected to ${url}`);
+      };
+  
+      socket.onmessage = (e) => console.log(e.data)
+    
+    } catch (e) {
+      console.log(e)
+    }
+
+    try {
+
+      socket.send("test")
+    } catch (e) {
+      console.log(e)
+    }
+
+  }, [url])
+
 
   return (
     <>
@@ -23,6 +52,7 @@ export function Chat({ socket = null }) {
         }
       >
         <MessageList
+        
           className="bg-neutral-400"
           style={{ height: "90%", borderRadius: "0.5rem" }}
         >
@@ -69,7 +99,7 @@ export function Chat({ socket = null }) {
         className={
           showChat
             ? "hidden"
-            : "fixed bottom-1 right-1 hover:cursor-pointer animate-bounce"
+            : `fixed bottom-1 right-1 hover:cursor-pointer ${newMessage && "animate-bounce"}`
         }
         onClick={() => {
           setShowChat(!showChat);
