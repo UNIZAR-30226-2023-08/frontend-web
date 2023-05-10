@@ -1,13 +1,15 @@
 import { Formik, Form } from "formik";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MyCheckbox, MyTextInput } from "../../components/Forms/forms";
 import * as Yup from "yup";
+import { BACKEND_URL, REGISTER_ENDPOINT } from "../../config";
 
 /**
  * Componente formulario de registro.
  * @returns
  */
 export function RegisterPage() {
+  const navigate = useNavigate();
   return (
     <div className="flex h-[80vh] flex-col justify-center items-center">
       <img
@@ -17,15 +19,17 @@ export function RegisterPage() {
       />
       <Formik
         initialValues={{
-          nombre: "",
-          usuario: "",
+          real_name: "",
+          username: "",
           email: "",
+          hashed_password: "",
           acceptedTerms: false, // added for our checkbox
           // jobType: "", // added for our select
         }}
         validationSchema={Yup.object({
-          nombre: Yup.string().required("Obligatorio"),
-          usuario: Yup.string().required("Obligatorio"),
+          real_name: Yup.string().required("Obligatorio"),
+          username: Yup.string().required("Obligatorio"),
+          hashed_password: Yup.string().required("Obligatorio"),
           email: Yup.string()
             .email("Formato incorrecto`")
             .required("Obligatorio"),
@@ -41,31 +45,46 @@ export function RegisterPage() {
           //   )
           //   .required("Required"),
         })}
-        onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
+        onSubmit={(values) => {
+          fetch('http://' + BACKEND_URL + REGISTER_ENDPOINT, {
+            method: "POST",
+            mode: "cors",
+            body: JSON.stringify(values, null, 2),
+            headers: {
+              "Content-type": "application/json",
+            },
+          })
+          .then(() => navigate("/login"));
 
-            setSubmitting(false);
-          }, 400);
+          // setTimeout(() => {
+          //   alert(JSON.stringify(values, null, 2));
+
+          //   setSubmitting(false);
+          // }, 400);
         }}
       >
         <Form className="flex flex-col max-w-lg md:min-w-[50vw] sm:min-w-[80vw]">
           <MyTextInput
-              label="Correo electrónico"
-              name="email"
-              type="email"
-              placeholder="micuenta@mail.com"
-            />
-          
+            label="Correo electrónico"
+            name="email"
+            type="email"
+            placeholder="micuenta@mail.com"
+          />
           <MyTextInput
-            label="Nombre usuario"
-            name="usuario"
+            label="Nombre real"
+            name="real_name"
             type="text"
             placeholder="Fernando Alonso"
           />
-           <MyTextInput
+          <MyTextInput
+            label="Nombre usuario"
+            name="username"
+            type="text"
+            placeholder="alo33"
+          />
+          <MyTextInput
             label="Contraseña"
-            name="passwd"
+            name="hashed_password"
             type="password"
             placeholder="micontraseña33"
           />

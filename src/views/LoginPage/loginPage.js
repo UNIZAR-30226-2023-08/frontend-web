@@ -4,41 +4,11 @@ import { MyCheckbox, MyTextInput } from "../../components/Forms/forms";
 import * as Yup from "yup";
 import { BeatLoader, CircleLoader, ClockLoader } from "react-spinners";
 import { useState } from "react";
+import { BACKEND_URL, LOGIN_ENDPOINT } from "../../config";
+import { response } from "msw";
 
 export function LoginPage() {
   const [isLoading, setLoading] = useState(false);
-
-  function onLogin(values, setSubmitting) {
-    // setLoading(true);
-    // TODO terminar
-    const body = {
-      username: "minombre",
-      password: "mipw"
-    }
-
-    // Axios.post("/login", body 
-      // {method: "post",
-      // headers: {
-      //   Accept: "application/json",
-      //   "Content-Type": "application/json",
-      // },
-
-      // //make sure to serialize your JSON body
-      // body: JSON.stringify({
-      //   username: "minombre",
-      //   password: "mipassword",
-      // }),}
-    // ).then((r) => console.log(r))
-      // .fi`nally(setLoading(false));
-
-    // setLoading(true);
-    // setTimeout(() => {
-    //   alert(JSON.stringify(values, null, 2));
-    //   setLoading(false);
-    //   // setSubmitting(false);
-    // }, 5000);
-    // setLoading(false);
-  }
 
   return (
     <div className="flex h-[80vh] flex-col justify-center items-center">
@@ -49,26 +19,53 @@ export function LoginPage() {
       />
       <Formik
         initialValues={{
-          usuario: "",
-          passwd: "",
+          username: "",
+          password: "",
           keepSession: false,
         }}
         validationSchema={Yup.object({
-          usuario: Yup.string().required("Obligatorio"),
-          passwd: Yup.string().required("Obligatorio"),
+          username: Yup.string().required("Obligatorio"),
+          password: Yup.string().required("Obligatorio"),
         })}
-        onSubmit={onLogin}
+        onSubmit={(values) => {
+          const params = new URLSearchParams();
+          params.append("username", values["username"]);
+          params.append("password", values["password"]);
+          fetch("http://" + BACKEND_URL + LOGIN_ENDPOINT, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: params,
+          })
+            .then((response) => {
+              if (!response.ok) {
+                console.log(response);
+                alert("Acceso no permitido"); //TODO poner bonito
+                throw new Error("Acceso no permitido")
+              } else {
+                console.log(response)
+                return response.json();
+              }
+            })
+            .then((data) => {
+              console.log(data["access_token"])
+              localStorage.setItem("access_token", data["access_token"]);
+              console.log(localStorage.getItem("access_token"));
+            })
+            .catch((e) => console.log(e));
+        }}
       >
         <Form className="flex flex-col max-w-lg md:min-w-[50vw] sm:min-w-[80vw]">
           <MyTextInput
-            label="Nombre de usuario"
-            name="usuario"
+            label="Nombre de username"
+            name="username"
             type="text"
             placeholder="fernandoalo"
           />
           <MyTextInput
             label="Contraseña"
-            name="passwd"
+            name="password"
             type="password"
             placeholder="micontraseña33"
           />
