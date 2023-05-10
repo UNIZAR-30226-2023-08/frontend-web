@@ -1,5 +1,6 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
+
 
 export function HandCard({ value, selected, allowed, onSelect }) {
   const theme = useContext(ThemeContext);
@@ -20,7 +21,7 @@ export function HandCard({ value, selected, allowed, onSelect }) {
   );
 }
 
-export function Hand({ hand, onPlay, allowed, myTurn = false }) {
+export function Hand({ hand, onPlay, allowed, myTurn = false, cambiar7Permitido }) {
   // const [hand, setHand] = useState(['1oros', '3oros', '5copas', '3espadas', '10espadas', '4bastos']);
   const [selected, setSelected] = useState(null);
 
@@ -55,6 +56,16 @@ export function Hand({ hand, onPlay, allowed, myTurn = false }) {
         disabled={!(selected && myTurn)}
       >
         Jugar
+      </button>
+      <button
+        onClick={() => onPlay(selected)}
+        className={`ml-5 bg-primary-500 text-neutral-100 font-bold py-2 px-4 rounded-full ${
+          !(cambiar7Permitido && selected && myTurn) &&
+          "opacity-50 cursor-not-allowed  hover:bg-primary-700"
+        }`}
+        disabled={!(cambiar7Permitido && selected && myTurn)}
+      >
+        Cambiar 7
       </button>
     </div>
   );
@@ -104,14 +115,30 @@ export function Played({ playedCards, playerNames, trumpWinner }) {
     </div>
   ));
 
+  const [showAlert, setShowAlert] = useState(false);
+  useEffect(() => {
+    if (trumpWinner !== "") {
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 3000);
+    }
+  }, [trumpWinner]);
+  
+
   return (
     <>
       <div className="grid grid-rows-3 grid-cols-3 col-start-2 col-end-2 row-start-2">
         {cards}
       </div>
-      <p>Ganador baza {trumpWinner}</p>
+      {showAlert && (
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800 text-white rounded-lg p-4">
+        <p className="text-lg font-semibold">
+          Ganador de la baza: {trumpWinner}</p>
+        </div>
+       )}
     </>
-  ); //TODO refactor
+  ); 
 }
 
 export function Deck({ triunfo, show }) {
@@ -136,7 +163,7 @@ export function Deck({ triunfo, show }) {
   );
 }
 
-export function Played2Players({ playedCards, playerNames }) {
+export function Played2Players({ playedCards, playerNames, trumpWinner }) {
   console.log(playedCards);
   function placeCard(key) {
     switch (key) {
@@ -176,14 +203,33 @@ export function Played2Players({ playedCards, playerNames }) {
     </div>
   ));
 
+  const [showAlert, setShowAlert] = useState(false);
+  useEffect(() => {
+    if (trumpWinner !== "") {
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 3000);
+    }
+  }, [trumpWinner]);
+  
+
   return (
-    <div className="grid grid-rows-2 grid-cols-3 col-start-2 col-end-2 row-start-2">
-      {cards}
-    </div>
-  ); //TODO refactor
+    <>
+      <div className="grid grid-rows-3 grid-cols-3 col-start-2 col-end-2 row-start-2">
+        {cards}
+      </div>
+      {showAlert && (
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800 text-white rounded-lg p-4">
+        <p className="text-lg font-semibold">
+          Ganador de la baza: {trumpWinner}</p>
+        </div>
+       )}
+    </>
+  );
 }
 
-export function Played3Players({ playedCards, playerNames }) {
+export function Played3Players({ playedCards, playerNames, trumpWinner}) {
   console.log(playedCards);
   function placeCard(key) {
     switch (key) {
@@ -227,9 +273,28 @@ export function Played3Players({ playedCards, playerNames }) {
     </div>
   ));
 
+  const [showAlert, setShowAlert] = useState(false);
+  useEffect(() => {
+    if (trumpWinner !== "") {
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 3000);
+    }
+  }, [trumpWinner]);
+  
+
   return (
-    <div className="grid grid-rows-2 grid-cols-3 col-start-2 col-end-2 row-start-2">
-      {cards}
-    </div>
-  ); //TODO refactor
+    <>
+      <div className="grid grid-rows-3 grid-cols-3 col-start-2 col-end-2 row-start-2">
+        {cards}
+      </div>
+      {showAlert && (
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800 text-white rounded-lg p-4">
+        <p className="text-lg font-semibold">
+          Ganador de la baza: {trumpWinner}</p>
+        </div>
+       )}
+    </>
+  );
 }

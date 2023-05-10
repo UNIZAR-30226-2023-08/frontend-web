@@ -1,4 +1,4 @@
-import { Deck, Hand, Played } from "./GameComponents";
+import { Deck, Hand, Played, Played2Players, Played3Players } from "./GameComponents";
 import { Chat } from "../Chat/chat";
 import { WaitingRoom } from "../WaitingRoom/WaitingRoom";
 import { useState, useContext, useEffect } from "react";
@@ -29,6 +29,7 @@ export function Game({ players, newGame, serverUrl, numJugadores }) {
   const [allowed, setAllowed] = useState(Array(6).fill(null));
   const [desconexion, setDesconexion] = useState(false);
   const [trumpWinner, setTrumpWinner] = useState(null);
+  const [cambiar7Permitido, setCambiar7Permitido] = useState(false);
   const navigate = useNavigate();
 
   const [msgH, setMsgH] = useState([]);
@@ -95,25 +96,65 @@ export function Game({ players, newGame, serverUrl, numJugadores }) {
   //   console.log("Redirecting...")
   //   return <Navigate replace to="/disconnect"/>
   // }
-
-
-  return (
-    <div className="grid h-screen grid-rows-[1fr_3fr_1fr] grid-cols-[1fr_2fr_1fr]">
-      <Deck triunfo={triunfo} show={!arrastre} />
-      <Played
-        playedCards={playedCards}
-        playerNames={playerNames}
-        trumpWinner={trumpWinner}
-      />
-      <Hand
-        hand={hand}
-        myTurn={playerLocation === turn}
-        allowed={allowed}
-        onPlay={playCard}
-      />
-      <Chat url={chatUrl} msgHistory={msgH} setMsgHistory={setMsgH} />
-    </div>
-  );
+  if (numJugadores === 2) {
+    return (
+      <div className="grid h-screen grid-rows-[1fr_3fr_1fr] grid-cols-[1fr_2fr-1fr]">
+        <Deck triunfo={triunfo} show={!arrastre} />
+        <Played2Players
+          playedCards={playedCards}
+          playerNames={playerNames}
+          trumpWinner={trumpWinner}
+        />
+        <Hand
+          hand={hand}
+          myTurn={playerLocation === turn}
+          allowed={allowed}
+          onPlay={playCard}
+          cambiar7Permitido={cambiar7Permitido}
+        />
+        <Chat url={chatUrl} msgHistory={msgH} setMsgHistory={setMsgH} />
+      </div>
+    );
+  } else if (numJugadores === 3) {
+    return (
+      <div className="grid h-screen grid-rows-[1fr_3fr_1fr] grid-cols-[1fr_2fr-1fr-1fr]">
+        <Deck triunfo={triunfo} show={!arrastre} />
+        <Played3Players
+          playedCards={playedCards}
+          playerNames={playerNames}
+          trumpWinner={trumpWinner}
+        />
+        <Hand
+          hand={hand}
+          myTurn={playerLocation === turn}
+          allowed={allowed}
+          onPlay={playCard}
+          cambiar7Permitido={cambiar7Permitido}
+        />
+        <Chat url={chatUrl} msgHistory={msgH} setMsgHistory={setMsgH} />
+      </div>
+    );
+  } else {
+    return (
+      <div className="grid h-screen grid-rows-[1fr_3fr_1fr] grid-cols-[1fr 1fr 1fr 1fr]">
+        <Deck triunfo={triunfo} show={!arrastre} />
+        <Played
+          playedCards={playedCards}
+          playerNames={playerNames}
+          trumpWinner={trumpWinner}
+        />
+        <Hand
+          hand={hand}
+          myTurn={playerLocation === turn}
+          allowed={allowed}
+          onPlay={playCard}
+          cambiar7Permitido={cambiar7Permitido}
+        />
+        <Chat url={chatUrl} msgHistory={msgH} setMsgHistory={setMsgH} />
+      </div>
+    );
+  }
+  
 }
 
 function handleMenssage(
