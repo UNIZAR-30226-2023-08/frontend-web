@@ -2,7 +2,7 @@
   "name": "my-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://UNIZAR-30226-2023-08.github.io/frontend-web",
+  "homepage": "https://unizar-30226-2023-08.github.io/frontend-web/",
   "dependencies": {
     "@chatscope/chat-ui-kit-react": "^1.10.1",
     "@chatscope/chat-ui-kit-styles": "^1.4.0",
