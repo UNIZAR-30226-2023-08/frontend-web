@@ -2,6 +2,7 @@
   "name": "my-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://UNIZAR-30226-2023-08.github.io/frontend-web",
   "dependencies": {
     "@chatscope/chat-ui-kit-react": "^1.10.1",
     "@chatscope/chat-ui-kit-styles": "^1.4.0",
@@ -22,6 +23,8 @@
     "yup": "^1.0.0"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -47,6 +50,7 @@
   },
   "devDependencies": {
     "env-cmd": "^10.1.0",
+    "gh-pages": "^5.0.0",
     "tailwindcss": "^3.2.6"
   }
 }
