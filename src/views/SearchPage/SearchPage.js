@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ContenedorTorneo from "./ContenedorTorneo";
 import ContenedorPartidaPublica from "./ContenedorPartidaPublica";
 import ContenedorPartidaPrivada from "./ContenedorPartidaPrivada";
 import { UserContext } from "../../context/UserContext";
-import { BACKEND_URL } from "../../config";
+import { BACKEND_URL, IA_ENDPOINT } from "../../config";
 
 export function SearchPage({
   url,
@@ -117,6 +117,23 @@ export function SearchPage({
             </ul>
           </div>
         </div>
+      </div>
+      <div className="w-screen flex align-center justify-center">
+        <Link to="/game">
+          <button
+            type="submit"
+            onClick={() => {
+              setUrl(BACKEND_URL + IA_ENDPOINT + "/" + username);
+              setJugadores(4);
+              startNewGame();
+            }}
+            className="	block rounded bg-primary-500 px-6 py-2.5 text-md font-medium leading-tight text-white shadow-md 
+                    transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:bg-primary-700 focus:shadow-lg 
+                    focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg mb-6"
+          >
+            Jugar contra IA (4 jugadores)
+          </button>
+        </Link>
       </div>
     </>
   );

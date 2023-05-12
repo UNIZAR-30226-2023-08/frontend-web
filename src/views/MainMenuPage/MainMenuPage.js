@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
+import { BACKEND_URL } from "../../config";
 
-export function MainMenuPage() {
+export function MainMenuPage({ setUrl }) {
   return (
     <div className="flex h-[80vh] flex-col justify-center items-center">
       <img
@@ -32,9 +33,8 @@ export function MainMenuPage() {
           data-te-ripple-init
           data-te-ripple-color="light"
           onClick={() => {
-            localStorage.removeItem('access_token')}
-            
-          }
+            localStorage.removeItem("access_token");
+          }}
         >
           Cerrar sesión
         </button>

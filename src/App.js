@@ -29,7 +29,7 @@ function App() {
       <UserContext.Provider value={Math.round(Math.random() * 1000)}>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<MainMenuPage />} />
+            <Route path="/" element={<MainMenuPage setUrl={setServerUrl} />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/waiting" element={<WaitingRoomPage />} />
