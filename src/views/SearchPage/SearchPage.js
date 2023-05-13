@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import ContenedorTorneo from "./ContenedorTorneo";
 import ContenedorPartidaPublica from "./ContenedorPartidaPublica";
 import ContenedorPartidaPrivada from "./ContenedorPartidaPrivada";
-import { UserContext } from "../../context/UserContext";
 import { BACKEND_URL, IA_ENDPOINT } from "../../config";
 
 export function SearchPage({
@@ -13,10 +12,11 @@ export function SearchPage({
   numJugadores,
   setJugadores,
   setGameId,
+  username
 }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
-  const username = useContext(UserContext);
+  // const username = useContext(UserContext);
 
   console.log(numJugadores);
 
@@ -44,12 +44,14 @@ export function SearchPage({
         </h1>
         <div className="flex justify-center">
           <ContenedorPartidaPublica
+            username={username}
             startNewGame={startNewGame}
             setGameId={setGameId}
             numJugadores={numJugadores}
             setUrl={setUrl}
           />
           <ContenedorPartidaPrivada
+            username={username}
             startNewGame={startNewGame}
             setGameId={setGameId}
             setUrl={setUrl}

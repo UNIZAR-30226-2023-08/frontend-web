@@ -1,6 +1,9 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-export function MainMenuPage() {
+export function MainMenuPage({ setUsername }) {
+  const [aux, setAux] = useState(false);
+  useEffect(() => setUsername(localStorage.getItem("username")));
   return (
     <div className="flex h-[80vh] flex-col justify-center items-center">
       <img
@@ -34,6 +37,8 @@ export function MainMenuPage() {
             data-te-ripple-color="light"
             onClick={() => {
               localStorage.removeItem("access_token");
+              localStorage.removeItem("username");
+              setAux(!aux)
             }}
           >
             Cerrar sesión

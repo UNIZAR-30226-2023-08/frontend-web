@@ -9,7 +9,6 @@ import { Chat } from "../Chat/chat";
 import { WaitingRoom } from "../WaitingRoom/WaitingRoom";
 import { useState, useContext, useEffect } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
-import { UserContext } from "../../context/UserContext";
 import { useNavigate } from "react-router";
 import { BACKEND_URL, CHAT_ENDPOINT } from "../../config";
 
@@ -17,9 +16,9 @@ let socket;
 let playerLocation;
 let state;
 
-export function Game({ players, newGame, serverUrl, numJugadores, gameId, setDisconnectMsg }) {
+export function Game({ players, newGame, serverUrl, numJugadores, gameId, setDisconnectMsg, username }) {
   const theme = useContext(ThemeContext);
-  const username = useContext(UserContext);
+  // const username = useContext(UserContext);
   const [chatUrl, setChatUrl] = useState(null);
   const [turn, setTurn] = useState(-2);
   const [playedCards, setPlayedCards] = useState({
@@ -109,7 +108,7 @@ export function Game({ players, newGame, serverUrl, numJugadores, gameId, setDis
           onPlay={playCard}
           cambiar7Permitido={cambiar7Permitido}
         />
-        <Chat url={chatUrl} msgHistory={msgH} setMsgHistory={setMsgH} />
+        <Chat url={chatUrl} msgHistory={msgH} setMsgHistory={setMsgH} username={username}/>
       </div>
     );
   } else if (numJugadores === 3) {
@@ -128,7 +127,7 @@ export function Game({ players, newGame, serverUrl, numJugadores, gameId, setDis
           onPlay={playCard}
           cambiar7Permitido={cambiar7Permitido}
         />
-        <Chat url={chatUrl} msgHistory={msgH} setMsgHistory={setMsgH} />
+        <Chat url={chatUrl} msgHistory={msgH} setMsgHistory={setMsgH} username={username} />
       </div>
     );
   } else {
@@ -147,7 +146,7 @@ export function Game({ players, newGame, serverUrl, numJugadores, gameId, setDis
           onPlay={playCard}
           cambiar7Permitido={cambiar7Permitido}
         />
-        <Chat url={chatUrl} msgHistory={msgH} setMsgHistory={setMsgH} />
+        <Chat url={chatUrl} msgHistory={msgH} setMsgHistory={setMsgH} username={username}/>
       </div>
     );
   }

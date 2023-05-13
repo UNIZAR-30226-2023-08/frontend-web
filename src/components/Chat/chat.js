@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../../context/UserContext";
 import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import {
   MessageList,
@@ -10,11 +9,11 @@ import {
 
 let socket;
 
-export function Chat({ url, msgHistory, setMsgHistory }) {
+export function Chat({ url, msgHistory, setMsgHistory, username }) {
   // return <img className="fixed bottom-0.5 right-0.5" src="/icons/chat.svg"/>
   const [showChat, setShowChat] = useState(false);
   const [newMessage, setNewMessage] = useState(false);
-  const username = useContext(UserContext);
+  // const username = useContext(UserContext);
 
   // TODO useEffect que resetee el listado cuando el socket cambie
   useEffect(() => console.log("render", msgHistory));

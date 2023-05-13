@@ -1,18 +1,10 @@
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
-import { UserContext } from "../../context/UserContext";
 import { BACKEND_URL } from "../../config";
 
-export default function ContenedorPartidaPublica({ startNewGame, numJugadores, setUrl, setGameId }) {
+export default function ContenedorPartidaPublica({ startNewGame, numJugadores, setUrl, setGameId, username }) {
 
-  // fetch("http://localhost:8000/gameid")
-  //   .then(response => response.json())
-  //   .then(id => {
-  //     setGameId(id)
-  //     console.log(`GameID antes: ${gameId}`)
-  //   })
-
-  const username = useContext(UserContext)
+  // const username = useContext(UserContext)
 
   return (
     <div className=" flex-1 mx-10 flex-col flex items-center justify-center py-10 px-10 border-violet-400 border-2">

@@ -9,7 +9,6 @@ import { Winners } from "./views/WinnersPage/Winners";
 import { ThemeContext } from "./context/ThemeContext";
 import themes from "./assets/themes.json";
 import { useState } from "react";
-import { UserContext } from "./context/UserContext";
 import { DisconnectPage } from "./views/DisconnectPage/DisconnectPage";
 import { BACKEND_URL } from "./config";
 import { ProtectedRoute } from "./components/Navigation/Navigation";
@@ -24,63 +23,72 @@ function App() {
   const [gameId, setGId] = useState(null);
   const [disconnectMsg, setDisconnectMsg] = useState("Desconexion");
   const [numJugadores, setNumJugadores] = useState(2);
+  const [username, setUsername] = useState("");
 
   const startNewGame = () => setNewGame(newGame + 1);
 
   return (
     <ThemeContext.Provider value={themes[currentTheme]}>
-      <UserContext.Provider value={Math.round(Math.random() * 1000)}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<MainMenuPage setUrl={setServerUrl} />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/waiting" element={<ProtectedRoute />}>
-              <Route path="/waiting" element={<WaitingRoomPage />} />
-            </Route>
-            <Route path="/game" element={<ProtectedRoute />}>
-              <Route
-                path="/game"
-                element={
-                  <GamePage
-                    url={serverUrl}
-                    newGame={newGame}
-                    gameId={gameId}
-                    numJugadores={numJugadores}
-                    setDisconnectMsg={setDisconnectMsg}
-                  />
-                }
-              />
-            </Route>
-            <Route path="/search" element={<ProtectedRoute />}>
-              <Route
-                path="/search"
-                element={
-                  <SearchPage
-                    url={serverUrl}
-                    setUrl={setServerUrl}
-                    gameId={gameId}
-                    setGameId={setGId}
-                    startNewGame={startNewGame}
-                    numJugadores={numJugadores}
-                    setJugadores={setNumJugadores}
-                  />
-                }
-              />
-            </Route>
-            <Route path="/winners" element={<ProtectedRoute />}>
-              <Route path="/winners" element={<Winners />} />
-            </Route>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <MainMenuPage setUrl={setServerUrl} setUsername={setUsername} />
+            }
+          />
+          <Route
+            path="/login"
+            element={<LoginPage setUsername={setUsername} />}
+          />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/waiting" element={<ProtectedRoute />}>
+            <Route path="/waiting" element={<WaitingRoomPage />} />
+          </Route>
+          <Route path="/game" element={<ProtectedRoute />}>
             <Route
-              path="/disconnect"
-              element={<DisconnectPage message={disconnectMsg} />}
+              path="/game"
+              element={
+                <GamePage
+                  username={username}
+                  url={serverUrl}
+                  newGame={newGame}
+                  gameId={gameId}
+                  numJugadores={numJugadores}
+                  setDisconnectMsg={setDisconnectMsg}
+                />
+              }
             />
-            {/* <Route path="/brackets" element={<Brackets />} /> */}
-            {/* <Route path="/test" element={<Test />} /> */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </BrowserRouter>
-      </UserContext.Provider>
+          </Route>
+          <Route path="/search" element={<ProtectedRoute />}>
+            <Route
+              path="/search"
+              element={
+                <SearchPage
+                  username={username}
+                  url={serverUrl}
+                  setUrl={setServerUrl}
+                  gameId={gameId}
+                  setGameId={setGId}
+                  startNewGame={startNewGame}
+                  numJugadores={numJugadores}
+                  setJugadores={setNumJugadores}
+                />
+              }
+            />
+          </Route>
+          <Route path="/winners" element={<ProtectedRoute />}>
+            <Route path="/winners" element={<Winners />} />
+          </Route>
+          <Route
+            path="/disconnect"
+            element={<DisconnectPage message={disconnectMsg} />}
+          />
+          {/* <Route path="/brackets" element={<Brackets />} /> */}
+          {/* <Route path="/test" element={<Test />} /> */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
     </ThemeContext.Provider>
     // <GamePage></GamePage>
     // <div className="App">

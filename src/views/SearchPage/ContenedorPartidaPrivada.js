@@ -1,15 +1,15 @@
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { BACKEND_URL, CREATE_PRIVATE_GAME_ENDPOINT } from "../../config";
-import { UserContext } from "../../context/UserContext";
 
 export default function ContenedorPartidaPrivada({
   startNewGame,
   seleccion,
   setGameId,
   setUrl,
+  username
 }) {
-  const username = useContext(UserContext);
+  // const username = useContext(UserContext);
   const [cod, setCod] = useState(null);
   let BASE_URL = BACKEND_URL + "/partida" + seleccion + "/join/" + username + "/";
   return (
