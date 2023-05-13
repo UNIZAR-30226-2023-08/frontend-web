@@ -11,7 +11,7 @@ let socket;
 let playerLocation;
 let state;
 
-export function Game({ players, newGame, serverUrl, numJugadores }) {
+export function Game({ players, newGame, serverUrl, numJugadores, gameId }) {
   const theme = useContext(ThemeContext);
   const username = useContext(UserContext);
   const [chatUrl, setChatUrl] = useState(null);
@@ -41,13 +41,14 @@ export function Game({ players, newGame, serverUrl, numJugadores }) {
     var str = `ws://${serverUrl}`;
     socket = new WebSocket(str);
     state = "Espera";
+    console.log("Esperando")
 
     socket.onopen = () => {
       console.log(`GAME WS: connected to ${str}`);
     };
 
     socket.onmessage = (m) => {
-      // console.log(m.data)
+      console.log(m.data)
       handleMenssage(
         players,
         m.data,
@@ -70,12 +71,6 @@ export function Game({ players, newGame, serverUrl, numJugadores }) {
       state = "Desconexion";
     };
 
-    // console.log(`NumJ ${numJugadores}`)
-    // const aux = {}
-    // for (var i = 0; i < numJugadores; i++) {
-    //   aux[`j${i}`] = null;
-    //   setPlayernames(aux);
-    // }
   }, [newGame]);
 
   if (desconexion === true) {
@@ -88,14 +83,9 @@ export function Game({ players, newGame, serverUrl, numJugadores }) {
   console.log(`Loc:${playerLocation}`);
   console.log(`Estado: ${state}`);
   if (state === "Espera") {
-    return <WaitingRoom players={playerNames} />;
+    return <WaitingRoom players={playerNames} gameId={gameId} />;
   }
 
-  // if (state === "Desconexion") {
-  //   state = "Espera"
-  //   console.log("Redirecting...")
-  //   return <Navigate replace to="/disconnect"/>
-  // }
   if (numJugadores === 2) {
     return (
       <div className="grid h-screen grid-rows-[1fr_3fr_1fr] grid-cols-[1fr_2fr-1fr]">
@@ -208,6 +198,7 @@ function handleMenssage(
   }
 
   if (message["Cartas"] !== undefined) {
+    console.log("Cartas " + state)
     setTrumpWinner(null);
     setHand(message["Cartas"]);
 

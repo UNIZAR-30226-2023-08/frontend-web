@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { UserContext } from "../../context/UserContext";
+import { BACKEND_URL } from "../../config";
 
-export default function ContenedorPartidaPublica({ startNewGame }) {
+export default function ContenedorPartidaPublica({ startNewGame, numJugadores, setUrl }) {
   const [gameId, setGameId] = useState(-1);
 
   // fetch("http://localhost:8000/gameid")
@@ -10,6 +12,8 @@ export default function ContenedorPartidaPublica({ startNewGame }) {
   //     setGameId(id)
   //     console.log(`GameID antes: ${gameId}`)
   //   })
+
+  const username = useContext(UserContext)
 
   return (
     <div className=" flex-1 mx-10 flex-col flex items-center justify-center py-10 px-10 border-violet-400 border-2">
@@ -21,6 +25,8 @@ export default function ContenedorPartidaPublica({ startNewGame }) {
         <button
           type="submit"
           onClick={() => {
+            setUrl(BACKEND_URL + "/partida" + numJugadores + "/" + username); // TODO mover
+            console.log("Start public")
             startNewGame();
           }}
           className="	block rounded bg-primary-500 px-6 py-2.5 text-md font-medium leading-tight text-white shadow-md 

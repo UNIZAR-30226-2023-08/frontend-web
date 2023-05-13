@@ -20,6 +20,7 @@ function App() {
   const [currentTheme, setCurrentTheme] = useState("default");
   const [serverUrl, setServerUrl] = useState(BACKEND_URL);
   const [newGame, setNewGame] = useState(0);
+  const [gameId, setGId] = useState(null);
   const [numJugadores, setNumJugadores] = useState(2);
 
   const startNewGame = () => setNewGame(newGame + 1);
@@ -39,6 +40,7 @@ function App() {
                 <GamePage
                   url={serverUrl}
                   newGame={newGame}
+                  gameId={gameId}
                   numJugadores={numJugadores}
                 />
               }
@@ -49,6 +51,8 @@ function App() {
                 <SearchPage
                   url={serverUrl}
                   setUrl={setServerUrl}
+                  gameId={gameId}
+                  setGameId={setGId}
                   startNewGame={startNewGame}
                   numJugadores={numJugadores}
                   setJugadores={setNumJugadores}

@@ -12,10 +12,13 @@ export function SearchPage({
   startNewGame,
   numJugadores,
   setJugadores,
+  setGameId,
 }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const username = useContext(UserContext);
+
+  console.log(numJugadores);
 
   useEffect(() => {
     setUrl(BACKEND_URL + "/partida4/" + username);
@@ -28,8 +31,7 @@ export function SearchPage({
 
   const handleDropdownClick = (seleccion) => {
     console.log("Dropdown");
-    setUrl(BACKEND_URL + "/partida" + seleccion + "/" + username);
-    console.log("***" + BACKEND_URL + "/partida" + seleccion + "/" + username);
+    // console.log("***" + BACKEND_URL + "/partida" + seleccion + "/" + username);
     setIsDropdownOpen(false);
     setJugadores(seleccion);
   };
@@ -41,8 +43,17 @@ export function SearchPage({
           Seleccione tipo de partida{" "}
         </h1>
         <div className="flex justify-center">
-          <ContenedorPartidaPublica startNewGame={startNewGame} />
-          <ContenedorPartidaPrivada />
+          <ContenedorPartidaPublica
+            startNewGame={startNewGame}
+            numJugadores={numJugadores}
+            setUrl={setUrl}
+          />
+          <ContenedorPartidaPrivada
+            startNewGame={startNewGame}
+            setGameId={setGameId}
+            setUrl={setUrl}
+            seleccion={numJugadores}
+          />
           <ContenedorTorneo />
         </div>
       </div>
@@ -125,6 +136,7 @@ export function SearchPage({
             onClick={() => {
               setUrl(BACKEND_URL + IA_ENDPOINT + "/" + username);
               setJugadores(4);
+              console.log("Start ia")
               startNewGame();
             }}
             className="	block rounded bg-primary-500 px-6 py-2.5 text-md font-medium leading-tight text-white shadow-md 
