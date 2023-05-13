@@ -3,8 +3,7 @@ import { Link } from "react-router-dom";
 import { UserContext } from "../../context/UserContext";
 import { BACKEND_URL } from "../../config";
 
-export default function ContenedorPartidaPublica({ startNewGame, numJugadores, setUrl }) {
-  const [gameId, setGameId] = useState(-1);
+export default function ContenedorPartidaPublica({ startNewGame, numJugadores, setUrl, setGameId }) {
 
   // fetch("http://localhost:8000/gameid")
   //   .then(response => response.json())
@@ -25,7 +24,8 @@ export default function ContenedorPartidaPublica({ startNewGame, numJugadores, s
         <button
           type="submit"
           onClick={() => {
-            setUrl(BACKEND_URL + "/partida" + numJugadores + "/" + username); // TODO mover
+            setUrl(BACKEND_URL + "/partida" + numJugadores + "/" + username);
+            setGameId(null)
             console.log("Start public")
             startNewGame();
           }}

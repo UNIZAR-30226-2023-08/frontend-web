@@ -45,6 +45,7 @@ export function SearchPage({
         <div className="flex justify-center">
           <ContenedorPartidaPublica
             startNewGame={startNewGame}
+            setGameId={setGameId}
             numJugadores={numJugadores}
             setUrl={setUrl}
           />

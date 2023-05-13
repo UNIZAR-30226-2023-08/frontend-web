@@ -21,6 +21,7 @@ function App() {
   const [serverUrl, setServerUrl] = useState(BACKEND_URL);
   const [newGame, setNewGame] = useState(0);
   const [gameId, setGId] = useState(null);
+  const [disconnectMsg, setDisconnectMsg] = useState("Desconexion");
   const [numJugadores, setNumJugadores] = useState(2);
 
   const startNewGame = () => setNewGame(newGame + 1);
@@ -42,6 +43,7 @@ function App() {
                   newGame={newGame}
                   gameId={gameId}
                   numJugadores={numJugadores}
+                  setDisconnectMsg={setDisconnectMsg}
                 />
               }
             />
@@ -60,7 +62,10 @@ function App() {
               }
             />
             <Route path="/winners" element={<Winners />} />
-            <Route path="/disconnect" element={<DisconnectPage />} />
+            <Route
+              path="/disconnect"
+              element={<DisconnectPage message={disconnectMsg} />}
+            />
             {/* <Route path="/brackets" element={<Brackets />} /> */}
             {/* <Route path="/test" element={<Test />} /> */}
             <Route path="*" element={<Navigate to="/" replace />} />

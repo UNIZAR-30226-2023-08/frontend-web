@@ -1,4 +1,10 @@
-import { Deck, Hand, Played, Played2Players, Played3Players } from "./GameComponents";
+import {
+  Deck,
+  Hand,
+  Played,
+  Played2Players,
+  Played3Players,
+} from "./GameComponents";
 import { Chat } from "../Chat/chat";
 import { WaitingRoom } from "../WaitingRoom/WaitingRoom";
 import { useState, useContext, useEffect } from "react";
@@ -11,7 +17,7 @@ let socket;
 let playerLocation;
 let state;
 
-export function Game({ players, newGame, serverUrl, numJugadores, gameId }) {
+export function Game({ players, newGame, serverUrl, numJugadores, gameId, setDisconnectMsg }) {
   const theme = useContext(ThemeContext);
   const username = useContext(UserContext);
   const [chatUrl, setChatUrl] = useState(null);
@@ -34,21 +40,20 @@ export function Game({ players, newGame, serverUrl, numJugadores, gameId }) {
 
   const [msgH, setMsgH] = useState([]);
 
-
   useEffect(() => {
     console.log(`serverUrl ${serverUrl}`);
     // var str = `ws://${BACKEND_URL}/partida4/${username}`;
     var str = `ws://${serverUrl}`;
     socket = new WebSocket(str);
     state = "Espera";
-    console.log("Esperando")
+    console.log("Esperando");
 
     socket.onopen = () => {
       console.log(`GAME WS: connected to ${str}`);
     };
 
     socket.onmessage = (m) => {
-      console.log(m.data)
+      console.log(m.data);
       handleMenssage(
         players,
         m.data,
@@ -61,6 +66,8 @@ export function Game({ players, newGame, serverUrl, numJugadores, gameId }) {
         setDesconexion,
         setTrumpWinner,
         setChatUrl,
+        setDisconnectMsg,
+        navigate,
         username,
         numJugadores
       );
@@ -68,14 +75,14 @@ export function Game({ players, newGame, serverUrl, numJugadores, gameId }) {
 
     socket.onclose = () => {
       console.log("Connection closed");
-      state = "Desconexion";
+      // state = "Desconexion";
     };
-
   }, [newGame]);
 
   if (desconexion === true) {
     state = "Espera";
     setDesconexion(false);
+    setDisconnectMsg("Partida abortada: jugador desconectado");
     navigate("/disconnect");
   }
 
@@ -144,7 +151,6 @@ export function Game({ players, newGame, serverUrl, numJugadores, gameId }) {
       </div>
     );
   }
-  
 }
 
 function handleMenssage(
@@ -159,6 +165,8 @@ function handleMenssage(
   setDesconexion,
   setTrumpWinner,
   setChatUrl,
+  setDisconnectMsg,
+  navigate,
   username,
   numJugadores
 ) {
@@ -170,7 +178,7 @@ function handleMenssage(
   }
 
   if (state === "Espera") {
-    handleEspera(message, setPlayernames, numJugadores);
+    handleEspera(message, setPlayernames, numJugadores, setDisconnectMsg, navigate);
     return;
   }
 
@@ -180,7 +188,7 @@ function handleMenssage(
   }
 
   if (message["chat"]) {
-    setChatUrl(BACKEND_URL + CHAT_ENDPOINT + message["chat"] + '/' + username);
+    setChatUrl(BACKEND_URL + CHAT_ENDPOINT + message["chat"] + "/" + username);
     return;
   }
 
@@ -198,7 +206,7 @@ function handleMenssage(
   }
 
   if (message["Cartas"] !== undefined) {
-    console.log("Cartas " + state)
+    console.log("Cartas " + state);
     setTrumpWinner(null);
     setHand(message["Cartas"]);
 
@@ -232,8 +240,22 @@ function playCard(card) {
   socket.send(card.join("-"));
 }
 
-function handleEspera(message, setPlayerNames, numJugadores) {
+function handleEspera(message, setPlayerNames, numJugadores, setDisconnectMsg, navigate) {
   console.log("Handler espera");
+  if (message === "Partida Llena.") {
+    console.log("Partida llena")
+    setDisconnectMsg("Partida llena, no se admiten más jugadores")
+    navigate("/disconnect")
+    return;
+  }
+
+  if (message === "Partida no encontrada.") {
+    console.log("Partida no encontrada")
+    setDisconnectMsg("Partida no encontrada ¿Has especificado el número de jugadores correcto?")
+    navigate("/disconnect")
+    return;
+  }
+
   if (message === "Comienza partida") {
     state = "Nuevas";
     return;
