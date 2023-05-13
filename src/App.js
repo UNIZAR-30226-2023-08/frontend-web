@@ -12,6 +12,7 @@ import { useState } from "react";
 import { UserContext } from "./context/UserContext";
 import { DisconnectPage } from "./views/DisconnectPage/DisconnectPage";
 import { BACKEND_URL } from "./config";
+import { ProtectedRoute } from "./components/Navigation/Navigation";
 
 function App() {
   document.body.classList.add("bg-gray-200");
@@ -34,34 +35,42 @@ function App() {
             <Route path="/" element={<MainMenuPage setUrl={setServerUrl} />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route path="/waiting" element={<WaitingRoomPage />} />
-            <Route
-              path="/game"
-              element={
-                <GamePage
-                  url={serverUrl}
-                  newGame={newGame}
-                  gameId={gameId}
-                  numJugadores={numJugadores}
-                  setDisconnectMsg={setDisconnectMsg}
-                />
-              }
-            />
-            <Route
-              path="/search"
-              element={
-                <SearchPage
-                  url={serverUrl}
-                  setUrl={setServerUrl}
-                  gameId={gameId}
-                  setGameId={setGId}
-                  startNewGame={startNewGame}
-                  numJugadores={numJugadores}
-                  setJugadores={setNumJugadores}
-                />
-              }
-            />
-            <Route path="/winners" element={<Winners />} />
+            <Route path="/waiting" element={<ProtectedRoute />}>
+              <Route path="/waiting" element={<WaitingRoomPage />} />
+            </Route>
+            <Route path="/game" element={<ProtectedRoute />}>
+              <Route
+                path="/game"
+                element={
+                  <GamePage
+                    url={serverUrl}
+                    newGame={newGame}
+                    gameId={gameId}
+                    numJugadores={numJugadores}
+                    setDisconnectMsg={setDisconnectMsg}
+                  />
+                }
+              />
+            </Route>
+            <Route path="/search" element={<ProtectedRoute />}>
+              <Route
+                path="/search"
+                element={
+                  <SearchPage
+                    url={serverUrl}
+                    setUrl={setServerUrl}
+                    gameId={gameId}
+                    setGameId={setGId}
+                    startNewGame={startNewGame}
+                    numJugadores={numJugadores}
+                    setJugadores={setNumJugadores}
+                  />
+                }
+              />
+            </Route>
+            <Route path="/winners" element={<ProtectedRoute />}>
+              <Route path="/winners" element={<Winners />} />
+            </Route>
             <Route
               path="/disconnect"
               element={<DisconnectPage message={disconnectMsg} />}

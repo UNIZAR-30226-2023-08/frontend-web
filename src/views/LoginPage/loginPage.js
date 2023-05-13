@@ -1,14 +1,14 @@
 import { Formik, Form } from "formik";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MyCheckbox, MyTextInput } from "../../components/Forms/forms";
 import * as Yup from "yup";
-import { BeatLoader, CircleLoader, ClockLoader } from "react-spinners";
+import { BeatLoader } from "react-spinners";
 import { useState } from "react";
 import { BACKEND_URL, LOGIN_ENDPOINT } from "../../config";
-import { response } from "msw";
 
 export function LoginPage() {
   const [isLoading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="flex h-[80vh] flex-col justify-center items-center">
@@ -42,16 +42,17 @@ export function LoginPage() {
               if (!response.ok) {
                 console.log(response);
                 alert("Acceso no permitido"); //TODO poner bonito
-                throw new Error("Acceso no permitido")
+                throw new Error("Acceso no permitido");
               } else {
-                console.log(response)
+                console.log(response);
                 return response.json();
               }
             })
             .then((data) => {
-              console.log(data["access_token"])
+              console.log(data["access_token"]);
               localStorage.setItem("access_token", data["access_token"]);
               console.log(localStorage.getItem("access_token"));
+              navigate("/");
             })
             .catch((e) => console.log(e));
         }}
