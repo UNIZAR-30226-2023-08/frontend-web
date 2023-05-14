@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { MainMenuPage } from "./views/MainMenuPage/MainMenuPage";
 import { WaitingRoomPage } from "./views/WaitingRoomPage/WaitingRoomPage";
 import { Winners } from "./views/WinnersPage/Winners";
+import { RankingPage } from "./views/RankingPage/RankingPage";
 import { ThemeContext } from "./context/ThemeContext";
 import themes from "./assets/themes.json";
 import { useState } from "react";
@@ -37,6 +38,7 @@ function App() {
               <MainMenuPage setUrl={setServerUrl} setUsername={setUsername} />
             }
           />
+          <Route path="/ranking" element={<RankingPage />} />
           <Route
             path="/login"
             element={<LoginPage setUsername={setUsername} />}
