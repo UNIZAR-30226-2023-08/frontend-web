@@ -4,3 +4,6 @@ export const REGISTER_ENDPOINT = "/register";
 export const LOGIN_ENDPOINT = "/token";
 export const IA_ENDPOINT = "/partidaIA";
 export const CREATE_PRIVATE_GAME_ENDPOINT = "/crear/partida"
+export const SHOP_ENDPOINT = "/tienda/barajas"
+export const MY_STATS_ENDPOINT = "/users/me/"
+export const PURCHASE_SKIN_ENDPOINT = "/tienda/barajas/comprar"

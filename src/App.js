@@ -9,16 +9,17 @@ import { Winners } from "./views/WinnersPage/Winners";
 import { RankingPage } from "./views/RankingPage/RankingPage";
 import { ThemeContext } from "./context/ThemeContext";
 import themes from "./assets/themes.json";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DisconnectPage } from "./views/DisconnectPage/DisconnectPage";
 import { BACKEND_URL } from "./config";
 import { ProtectedRoute } from "./components/Navigation/Navigation";
+import { ShopPage } from "./views/ShopPage/ShopPage";
 
 function App() {
   document.body.classList.add("bg-gray-200");
   document.body.classList.add("dark:bg-gray-600");
 
-  const [currentTheme, setCurrentTheme] = useState("default");
+  const [currentTheme, setCurrentTheme] = useState("classic");
   const [serverUrl, setServerUrl] = useState(BACKEND_URL);
   const [newGame, setNewGame] = useState(0);
   const [gameId, setGId] = useState(null);
@@ -27,6 +28,18 @@ function App() {
   const [username, setUsername] = useState("");
 
   const startNewGame = () => setNewGame(newGame + 1);
+
+  useEffect(() => {
+    if (
+      localStorage.getItem("access_token") &&
+      localStorage.getItem("username")
+    ) {
+      setUsername(localStorage.getItem("username"));
+    } else {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("username");
+    }
+  }, []);
 
   return (
     <ThemeContext.Provider value={themes[currentTheme]}>
@@ -86,6 +99,18 @@ function App() {
             path="/disconnect"
             element={<DisconnectPage message={disconnectMsg} />}
           />
+          <Route path="/shop" element={<ProtectedRoute />}>
+            <Route
+              path="/shop"
+              element={
+                <ShopPage
+                  username={username}
+                  setCurrentTheme={setCurrentTheme}
+                  currentTheme={currentTheme}
+                />
+              }
+            />
+          </Route>
           {/* <Route path="/brackets" element={<Brackets />} /> */}
           {/* <Route path="/test" element={<Test />} /> */}
           <Route path="*" element={<Navigate to="/" replace />} />
