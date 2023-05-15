@@ -14,7 +14,7 @@ export function LoginPage({ setUsername }) {
     <div className="flex h-[80vh] flex-col justify-center items-center">
       <img
         className="mb-4"
-        src="https://via.placeholder.com/150 "
+        src="/logo.png"
         alt="placeholder"
       />
       <Formik

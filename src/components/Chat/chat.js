@@ -29,12 +29,12 @@ export function Chat({ url, msgHistory, setMsgHistory, username }) {
 
       socket.onopen = () => {
         console.log(`CHAT OK: ${username} connected to ${url}`);
-        try {
-          socket.send("test");
-          console.log("Test sent");
-        } catch (e) {
-          console.log(e);
-        }
+        // try {
+        //   socket.send("test");
+        //   console.log("Test sent");
+        // } catch (e) {
+        //   console.log(e);
+        // }
       };
 
       socket.onmessage = (msg) => {

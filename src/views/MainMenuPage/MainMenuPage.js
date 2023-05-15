@@ -8,7 +8,7 @@ export function MainMenuPage({ setUsername }) {
     <div className="flex h-[80vh] flex-col justify-center items-center">
       <img
         className="mb-4"
-        src="https://via.placeholder.com/150 "
+        src="/logo.png"
         alt="placeholder"
       />
       {localStorage.getItem("access_token") ? (
