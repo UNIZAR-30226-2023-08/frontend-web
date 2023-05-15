@@ -49,10 +49,9 @@ export function Hand({ hand, onPlay, allowed, myTurn = false, cambiar7Permitido 
       })}
       <button
         onClick={() => onPlay(selected)}
-        className={`ml-5 bg-primary-500 text-neutral-100 font-bold py-2 px-4 rounded-full ${
-          !(selected && myTurn) &&
-          "opacity-50 cursor-not-allowed  hover:bg-primary-700"
-        }`}
+        className={`ml-5 bg-primary-500 text-neutral-100 font-bold py-2 px-4 rounded-full
+         ${!(selected && myTurn) && "opacity-50 cursor-not-allowed  hover:bg-primary-700"
+        } ${myTurn && "border-secondary-300 border-4"}`}
         disabled={!(selected && myTurn)}
       >
         Jugar

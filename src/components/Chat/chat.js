@@ -15,7 +15,6 @@ export function Chat({ url, msgHistory, setMsgHistory, username }) {
   const [newMessage, setNewMessage] = useState(false);
   // const username = useContext(UserContext);
 
-  // TODO useEffect que resetee el listado cuando el socket cambie
   useEffect(() => console.log("render", msgHistory));
 
   useEffect(() => {

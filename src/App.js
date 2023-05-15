@@ -26,7 +26,12 @@ function App() {
   const [disconnectMsg, setDisconnectMsg] = useState("Desconexion");
   const [numJugadores, setNumJugadores] = useState(2);
   const [username, setUsername] = useState("");
+  const [rankingChecked, setRankingC] = useState(0);
+  const [winners, setWinners] = useState([])
+  const [playerNames, setPlayernames] = useState({});
 
+
+  const checkRanking = () => setRankingC(rankingChecked + 1);
   const startNewGame = () => setNewGame(newGame + 1);
 
   useEffect(() => {
@@ -48,10 +53,12 @@ function App() {
           <Route
             path="/"
             element={
-              <MainMenuPage setUrl={setServerUrl} setUsername={setUsername} />
+              <MainMenuPage setUrl={setServerUrl} setUsername={setUsername} checkRanking={checkRanking}/>
             }
           />
-          <Route path="/ranking" element={<RankingPage />} />
+          <Route path="/ranking" element={<ProtectedRoute />}>
+            <Route path="/ranking" element={<RankingPage rankingChecked={rankingChecked}/>} />
+          </Route>
           <Route
             path="/login"
             element={<LoginPage setUsername={setUsername} />}
@@ -71,6 +78,9 @@ function App() {
                   gameId={gameId}
                   numJugadores={numJugadores}
                   setDisconnectMsg={setDisconnectMsg}
+                  setWinners={setWinners}
+                  setPlayernames={setPlayernames}
+                  playerNames={playerNames}
                 />
               }
             />
@@ -93,7 +103,7 @@ function App() {
             />
           </Route>
           <Route path="/winners" element={<ProtectedRoute />}>
-            <Route path="/winners" element={<Winners />} />
+            <Route path="/winners" element={<Winners players={playerNames} winners={winners} />}/>
           </Route>
           <Route
             path="/disconnect"
@@ -111,6 +121,7 @@ function App() {
               }
             />
           </Route>
+          // <Route to="/test" element={<Winners players={["pepe", "pedro", "juan", "miguel"]} winners={[0, 1]}/>}></Route>
           {/* <Route path="/brackets" element={<Brackets />} /> */}
           {/* <Route path="/test" element={<Test />} /> */}
           <Route path="*" element={<Navigate to="/" replace />} />

@@ -26,7 +26,7 @@ async function obtenerRankingUsuarios(limiteLista) {
   }
 }
 
-export function RankingUsuarios() {
+export function RankingUsuarios({rankingChecked}) {
   const [ranking, setRanking] = useState([]);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export function RankingUsuarios() {
       .catch((error) => {
         console.error(error);
       });
-  }, [obtenerRankingUsuarios]);
+  }, [rankingChecked]);
   
   return (
     <div style={{ width: "80%", margin: "0 auto" }}>

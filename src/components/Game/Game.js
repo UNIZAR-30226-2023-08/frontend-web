@@ -16,7 +16,8 @@ let socket;
 let playerLocation;
 let state;
 
-export function Game({ players, newGame, serverUrl, numJugadores, gameId, setDisconnectMsg, username }) {
+export function Game({ players, newGame, serverUrl, numJugadores, gameId,
+   setDisconnectMsg, username, setWinners, playerNames, setPlayernames }) {
   const theme = useContext(ThemeContext);
   // const username = useContext(UserContext);
   const [chatUrl, setChatUrl] = useState(null);
@@ -27,7 +28,6 @@ export function Game({ players, newGame, serverUrl, numJugadores, gameId, setDis
     j2: null,
     j3: null,
   });
-  const [playerNames, setPlayernames] = useState({});
   const [triunfo, setTriunfo] = useState(null);
   const [arrastre, setArrastre] = useState(false);
   const [hand, setHand] = useState(Array(6).fill(null));
@@ -68,7 +68,8 @@ export function Game({ players, newGame, serverUrl, numJugadores, gameId, setDis
         setDisconnectMsg,
         navigate,
         username,
-        numJugadores
+        numJugadores,
+        setWinners,
       );
     };
 
@@ -77,6 +78,7 @@ export function Game({ players, newGame, serverUrl, numJugadores, gameId, setDis
       // state = "Desconexion";
     };
   }, [newGame]);
+
 
   if (desconexion === true) {
     state = "Espera";
@@ -114,7 +116,7 @@ export function Game({ players, newGame, serverUrl, numJugadores, gameId, setDis
   } else if (numJugadores === 3) {
     return (
       <div className="grid h-screen grid-rows-[1fr_3fr_1fr] grid-cols-[1fr_2fr-1fr-1fr]">
-        <Deck triunfo={triunfo} show={!arrastre} />
+        <Deck triunfo={triunfo} show={true} />
         <Played3Players
           playedCards={playedCards}
           playerNames={playerNames}
@@ -167,7 +169,8 @@ function handleMenssage(
   setDisconnectMsg,
   navigate,
   username,
-  numJugadores
+  numJugadores,
+  setWinners,
 ) {
   let message;
   try {
@@ -191,6 +194,14 @@ function handleMenssage(
     return;
   }
 
+  if(message["Ganador Partida"] === null) {
+    state = "Vueltas"
+  } else if (message["Ganador Partida"] !== undefined){ 
+    console.log("Winners")
+    setWinners([0]) // TODO comprobar que viene un array
+    navigate("/winners")
+  }
+
   if (message["Jugador"] !== undefined) {
     playerLocation = message["Jugador"];
     console.log(message["Jugador"]);
@@ -209,7 +220,7 @@ function handleMenssage(
     setTrumpWinner(null);
     setHand(message["Cartas"]);
 
-    if (state === "Nuevas") {
+    if (state === "Nuevas" || state === "Vueltas") {
       setAllowed(message["Cartas"]);
     }
   } else if (message["Triunfo"] !== undefined) {

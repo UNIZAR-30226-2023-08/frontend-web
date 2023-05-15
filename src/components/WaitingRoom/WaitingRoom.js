@@ -10,11 +10,6 @@ export function WaitingRoom({ players, gameId }) {
         {Object.values(players).map((player, i) => (
           <PlayerCard key={i} style={i} name={player} />
         ))}
-
-        {/* {Object.keys(players).forEach((key) => {
-          console.log(key)
-          return <PlayerCard key={key} name={players[key]} />
-        })} */}
       </div>
       
       <p className={gameId ? "row-start-3 flex justify-center items-end sm:my-[3%] lg:mb-[-3vh] font-semibold lg:text-4xl sm:text-3xl text-neutral-600 dark:text-neutral-200" : "hidden"}>

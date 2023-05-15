@@ -6,7 +6,10 @@ export function GamePage({
   numJugadores,
   gameId,
   setDisconnectMsg,
-  username
+  username,
+  setWinners,
+  setPlayernames,
+  playerNames
 }) {
   return (
     <Game
@@ -16,6 +19,9 @@ export function GamePage({
       numJugadores={numJugadores}
       setDisconnectMsg={setDisconnectMsg}
       username={username}
+      setWinners={setWinners}
+      setPlayernames={setPlayernames}
+      playerNames={playerNames}
     />
   );
 }
