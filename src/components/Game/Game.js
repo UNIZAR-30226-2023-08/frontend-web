@@ -37,6 +37,7 @@ export function Game({ newGame, serverUrl, numJugadores, gameId,
   const [cambiar7Permitido, setCambiar7Permitido] = useState(false);
   const [mensajeCanta, setMensajeCanta] = useState(null);
   const [puntos, setPuntos] = useState([]);
+  // const [cambio7, setCambio7] = useState(null);
   const navigate = useNavigate();
 
   const [msgH, setMsgH] = useState([]);
@@ -99,9 +100,10 @@ export function Game({ newGame, serverUrl, numJugadores, gameId,
     return <WaitingRoom players={playerNames} gameId={gameId} />;
   }
 
+    console.log("Estado arrastre: " + arrastre)
     return (
       <div className="grid h-screen grid-rows-[1fr_3fr_1fr] grid-cols-[1fr 1fr 1fr 1fr]">
-        <Deck triunfo={triunfo} show={(numJugadores === 3) || !arrastre} />
+        <Deck triunfo={triunfo} arrastre={arrastre} numJugadores={numJugadores} />
         <Played
           playedCards={playedCards}
           playerNames={playerNames}
@@ -109,6 +111,7 @@ export function Game({ newGame, serverUrl, numJugadores, gameId,
           mensajeCanta={mensajeCanta}
           setMensajeCanta={setMensajeCanta}
           puntos={puntos}
+          setPuntos={setPuntos}
         />
         <Hand
           hand={hand}
@@ -201,6 +204,7 @@ function handleMenssage(
     
   if (message["Cambiado"] !== undefined && [1, 2, 3, 4].includes(message["Cambiado"])) {
     setCambiar7Permitido(false);
+    // setCambio7(message["Cambiado"])
     console.log("Cambiado message received with value " + message["Cambiado"]);
     return;
   }

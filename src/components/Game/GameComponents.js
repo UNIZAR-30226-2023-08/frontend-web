@@ -1,7 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
 
-
 export function HandCard({ value, selected, allowed, onSelect }) {
   const theme = useContext(ThemeContext);
   let src = "";
@@ -21,7 +20,14 @@ export function HandCard({ value, selected, allowed, onSelect }) {
   );
 }
 
-export function Hand({ hand, onPlay, allowed, myTurn = false, cambiar7Permitido, onChange7}) {
+export function Hand({
+  hand,
+  onPlay,
+  allowed,
+  myTurn = false,
+  cambiar7Permitido,
+  onChange7,
+}) {
   // const [hand, setHand] = useState(['1oros', '3oros', '5copas', '3espadas', '10espadas', '4bastos']);
   const [selected, setSelected] = useState(null);
 
@@ -50,8 +56,10 @@ export function Hand({ hand, onPlay, allowed, myTurn = false, cambiar7Permitido,
       <button
         onClick={() => onPlay(selected)}
         className={`ml-5 bg-primary-500 text-neutral-100 font-bold py-2 px-4 rounded-full
-         ${!(selected && myTurn) && "opacity-50 cursor-not-allowed  hover:bg-primary-700"
-        } ${myTurn && "border-secondary-300 border-4"}`}
+         ${
+           !(selected && myTurn) &&
+           "opacity-50 cursor-not-allowed  hover:bg-primary-700"
+         } ${myTurn && "border-secondary-300 border-4"}`}
         disabled={!(selected && myTurn)}
       >
         Jugar
@@ -59,7 +67,7 @@ export function Hand({ hand, onPlay, allowed, myTurn = false, cambiar7Permitido,
       <button
         onClick={() => onChange7()}
         className={`ml-5 bg-primary-500 text-neutral-100 font-bold py-2 px-4 rounded-full ${
-          (!cambiar7Permitido) &&
+          !cambiar7Permitido &&
           "opacity-50 cursor-not-allowed  hover:bg-primary-700"
         }`}
         disabled={!cambiar7Permitido}
@@ -70,12 +78,22 @@ export function Hand({ hand, onPlay, allowed, myTurn = false, cambiar7Permitido,
   );
 }
 
-export function Played({ playedCards, playerNames, trumpWinner, mensajeCanta, setMensajeCanta, puntos }) {
-  console.log(`TW: ${trumpWinner}`)
+export function Played({
+  playedCards,
+  playerNames,
+  trumpWinner,
+  mensajeCanta,
+  setMensajeCanta,
+  puntos,
+  setPuntos,
+  cambio7,
+  setCambio7,
+}) {
+  console.log(`TW: ${trumpWinner}`);
   function placeCard(key) {
     switch (key) {
       case "j0":
-        return "row-start-3 row-end-3 col-start-2 col-end-2 flex-col"
+        return "row-start-3 row-end-3 col-start-2 col-end-2 flex-col";
       case "j1":
         return "row-start-2 row-end-2 col-start-3 col-end-3 -rotate-90 lg:flex-col";
       case "j2":
@@ -120,14 +138,13 @@ export function Played({ playedCards, playerNames, trumpWinner, mensajeCanta, se
       setShowAlert(true);
       setTimeout(() => {
         setShowAlert(false);
-        setMensajeCanta(null)
+        setMensajeCanta(null);
       }, 3000);
     }
   }, [trumpWinner, mensajeCanta]);
-  
-  console.log(playerNames)
 
-  useEffect(() => console.log("Puntos vueltas: " + puntos), [puntos])
+  console.log(playerNames);
+
 
   return (
     <>
@@ -136,18 +153,24 @@ export function Played({ playedCards, playerNames, trumpWinner, mensajeCanta, se
       </div>
       {showAlert && (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800 text-white rounded-lg p-4">
-        <p className="text-lg font-semibold">
-          Ganador de la baza: {playerNames["j" + trumpWinner]} {mensajeCanta && "y " + mensajeCanta}</p>
+          <p className="text-lg font-semibold">
+            Ganador de la baza: {playerNames["j" + trumpWinner]}{" "}
+            {mensajeCanta && "y " + mensajeCanta}
+            {(puntos !== undefined || puntos !== null) && Object.keys(puntos).map((key) => {
+              <span>{playerNames["j" + key] + " " + puntos[key]}</span>;
+            })}
+          </p>
         </div>
       )}
     </>
-  ); 
+  );
 }
 
-export function Deck({ triunfo, show }) {
+export function Deck({ triunfo, arrastre, numJugadores }) {
+  let show = (numJugadores === 3) || !arrastre;
   const theme = useContext(ThemeContext);
-  console.log("Mostrar deck: " + show)
-  console.log("Mostrar deck: " + triunfo)
+  console.log("Mostrar deck: " + show);
+  console.log("Mostrar deck: " + triunfo);
   return (
     <div
       className={
@@ -214,7 +237,7 @@ export function Played2Players({ playedCards, playerNames, trumpWinner }) {
 
   useEffect(() => {
     if (trumpWinner !== "") {
-      setCount((prevCount) => prevCount + 1); 
+      setCount((prevCount) => prevCount + 1);
       if (count % 2 !== 1) {
         setShowAlert(true);
         setTimeout(() => {
@@ -223,7 +246,6 @@ export function Played2Players({ playedCards, playerNames, trumpWinner }) {
       }
     }
   }, [trumpWinner]);
-  
 
   return (
     <>
@@ -232,15 +254,16 @@ export function Played2Players({ playedCards, playerNames, trumpWinner }) {
       </div>
       {showAlert && (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800 text-white rounded-lg p-4">
-        <p className="text-lg font-semibold">
-          Ganador de la baza: {trumpWinner}</p>
+          <p className="text-lg font-semibold">
+            Ganador de la baza: {trumpWinner}
+          </p>
         </div>
-       )}
+      )}
     </>
   );
 }
 
-export function Played3Players({ playedCards, playerNames, trumpWinner}) {
+export function Played3Players({ playedCards, playerNames, trumpWinner }) {
   console.log(playedCards);
   function placeCard(key) {
     switch (key) {
@@ -293,7 +316,6 @@ export function Played3Players({ playedCards, playerNames, trumpWinner}) {
       }, 3000);
     }
   }, [trumpWinner]);
-  
 
   return (
     <>
@@ -302,10 +324,11 @@ export function Played3Players({ playedCards, playerNames, trumpWinner}) {
       </div>
       {showAlert && (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800 text-white rounded-lg p-4">
-        <p className="text-lg font-semibold">
-          Ganador de la baza: {trumpWinner}</p>
+          <p className="text-lg font-semibold">
+            Ganador de la baza: {trumpWinner}
+          </p>
         </div>
-       )}
+      )}
     </>
   );
 }
