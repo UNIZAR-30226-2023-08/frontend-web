@@ -35,6 +35,8 @@ export function Game({ players, newGame, serverUrl, numJugadores, gameId,
   const [desconexion, setDesconexion] = useState(false);
   const [trumpWinner, setTrumpWinner] = useState(null);
   const [cambiar7Permitido, setCambiar7Permitido] = useState(false);
+  const [mensajeCanta, setMensajeCanta] = useState("");
+
   const navigate = useNavigate();
 
   const [msgH, setMsgH] = useState([]);
@@ -70,6 +72,9 @@ export function Game({ players, newGame, serverUrl, numJugadores, gameId,
         username,
         numJugadores,
         setWinners,
+        setCambiar7Permitido,
+        playerNames,
+        setMensajeCanta
       );
     };
 
@@ -109,6 +114,7 @@ export function Game({ players, newGame, serverUrl, numJugadores, gameId,
           allowed={allowed}
           onPlay={playCard}
           cambiar7Permitido={cambiar7Permitido}
+          onChange7={change7}
         />
         <Chat url={chatUrl} msgHistory={msgH} setMsgHistory={setMsgH} username={username}/>
       </div>
@@ -128,6 +134,7 @@ export function Game({ players, newGame, serverUrl, numJugadores, gameId,
           allowed={allowed}
           onPlay={playCard}
           cambiar7Permitido={cambiar7Permitido}
+          onChange7={change7}
         />
         <Chat url={chatUrl} msgHistory={msgH} setMsgHistory={setMsgH} username={username} />
       </div>
@@ -140,6 +147,7 @@ export function Game({ players, newGame, serverUrl, numJugadores, gameId,
           playedCards={playedCards}
           playerNames={playerNames}
           trumpWinner={trumpWinner}
+          mensajeCantar={mensajeCanta}
         />
         <Hand
           hand={hand}
@@ -147,6 +155,7 @@ export function Game({ players, newGame, serverUrl, numJugadores, gameId,
           allowed={allowed}
           onPlay={playCard}
           cambiar7Permitido={cambiar7Permitido}
+          onChange7={change7}
         />
         <Chat url={chatUrl} msgHistory={msgH} setMsgHistory={setMsgH} username={username}/>
       </div>
@@ -171,6 +180,9 @@ function handleMenssage(
   username,
   numJugadores,
   setWinners,
+  setCambiar7Permitido,
+  playerNames,
+  setMensajeCanta
 ) {
   let message;
   try {
@@ -211,9 +223,31 @@ function handleMenssage(
     setTrumpWinner(message["Ganador"]);
   }
 
+  if (message["Canta"] !== undefined && ["20", "40"].includes(message["Canta"]) && ["oro", "basto", "espada", "copa"].includes(message["Palo"]) && [0, 1, 2, 3].includes(message["Jugador"])) {
+        const canta = message["Canta"]; // valor de la propiedad "Canta"
+        const palo = message["Palo"]; // valor de la propiedad "Palo"
+        const jugador = message["Jugador"]; // valor de la propiedad "Jugador"
+
+        console.log("jugador " + jugador + " ha cantado " + canta + " en " + palo + "s");
+        setMensajeCanta("jugador " + jugador + " ha cantado " + canta + " en " + palo + "s");
+         return;
+    }
+
   if (message === "Arrastre") {
     state = "Arrastre";
   }
+
+  if (message["Cambiar7"] !== undefined && message["Cambiar7"] === true) {
+      console.log("Cambiar7 message received with value true");
+      setCambiar7Permitido(true);
+      return
+    }
+    
+    if (message["Cambiado"] !== undefined && [1, 2, 3, 4].includes(message["Cambiado"])) {
+      setCambiar7Permitido(false);
+      console.log("Cambiado message received with value " + message["Cambiado"]);
+      return;
+      }
 
   if (message["Cartas"] !== undefined) {
     console.log("Cartas " + state);
@@ -248,6 +282,10 @@ function handleMenssage(
 
 function playCard(card) {
   socket.send(card.join("-"));
+}
+
+function change7(){
+  socket.send("True");
 }
 
 function handleEspera(message, setPlayerNames, numJugadores, setDisconnectMsg, navigate) {
