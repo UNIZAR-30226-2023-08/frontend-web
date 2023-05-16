@@ -3,6 +3,10 @@ import { Link } from "react-router-dom";
 export function Winners({ players, winners }) {
   const winnerNames = [];
 
+  if (winners.constructor !== Array) {
+    winnerNames = [players["j" + winners]]
+  }
+
   for (var index in winners) {
     console.log("j" + index)
     winnerNames.push(players["j" + index]);

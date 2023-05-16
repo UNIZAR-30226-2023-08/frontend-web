@@ -166,7 +166,7 @@ function handleMenssage(
     state = "Vueltas"
   } else if (message["Ganador Partida"] !== undefined){ 
     console.log("Winners")
-    setWinners([0]) // TODO comprobar que viene un array
+    setWinners(message["Ganador Partida"]) 
     navigate("/winners")
   }
 
