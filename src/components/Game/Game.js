@@ -16,7 +16,7 @@ let socket;
 let playerLocation;
 let state;
 
-export function Game({ players, newGame, serverUrl, numJugadores, gameId,
+export function Game({ newGame, serverUrl, numJugadores, gameId,
    setDisconnectMsg, username, setWinners, playerNames, setPlayernames }) {
   const theme = useContext(ThemeContext);
   // const username = useContext(UserContext);
@@ -35,6 +35,7 @@ export function Game({ players, newGame, serverUrl, numJugadores, gameId,
   const [desconexion, setDesconexion] = useState(false);
   const [trumpWinner, setTrumpWinner] = useState(null);
   const [cambiar7Permitido, setCambiar7Permitido] = useState(false);
+  const [mensajeCanta, setMensajeCanta] = useState(null);
   const navigate = useNavigate();
 
   const [msgH, setMsgH] = useState([]);
@@ -54,7 +55,7 @@ export function Game({ players, newGame, serverUrl, numJugadores, gameId,
     socket.onmessage = (m) => {
       console.log(m.data);
       handleMenssage(
-        players,
+        playerNames,
         m.data,
         setPlayernames,
         setHand,
@@ -70,6 +71,7 @@ export function Game({ players, newGame, serverUrl, numJugadores, gameId,
         username,
         numJugadores,
         setWinners,
+        setMensajeCanta
       );
     };
 
@@ -94,45 +96,6 @@ export function Game({ players, newGame, serverUrl, numJugadores, gameId,
     return <WaitingRoom players={playerNames} gameId={gameId} />;
   }
 
-  if (numJugadores === 2) {
-    return (
-      <div className="grid h-screen grid-rows-[1fr_3fr_1fr] grid-cols-[1fr_2fr-1fr]">
-        <Deck triunfo={triunfo} show={!arrastre} />
-        <Played2Players
-          playedCards={playedCards}
-          playerNames={playerNames}
-          trumpWinner={trumpWinner}
-        />
-        <Hand
-          hand={hand}
-          myTurn={playerLocation === turn}
-          allowed={allowed}
-          onPlay={playCard}
-          cambiar7Permitido={cambiar7Permitido}
-        />
-        <Chat url={chatUrl} msgHistory={msgH} setMsgHistory={setMsgH} username={username}/>
-      </div>
-    );
-  } else if (numJugadores === 3) {
-    return (
-      <div className="grid h-screen grid-rows-[1fr_3fr_1fr] grid-cols-[1fr_2fr-1fr-1fr]">
-        <Deck triunfo={triunfo} show={true} />
-        <Played3Players
-          playedCards={playedCards}
-          playerNames={playerNames}
-          trumpWinner={trumpWinner}
-        />
-        <Hand
-          hand={hand}
-          myTurn={playerLocation === turn}
-          allowed={allowed}
-          onPlay={playCard}
-          cambiar7Permitido={cambiar7Permitido}
-        />
-        <Chat url={chatUrl} msgHistory={msgH} setMsgHistory={setMsgH} username={username} />
-      </div>
-    );
-  } else {
     return (
       <div className="grid h-screen grid-rows-[1fr_3fr_1fr] grid-cols-[1fr 1fr 1fr 1fr]">
         <Deck triunfo={triunfo} show={!arrastre} />
@@ -140,6 +103,8 @@ export function Game({ players, newGame, serverUrl, numJugadores, gameId,
           playedCards={playedCards}
           playerNames={playerNames}
           trumpWinner={trumpWinner}
+          mensajeCanta={mensajeCanta}
+          setMensajeCanta={setMensajeCanta}
         />
         <Hand
           hand={hand}
@@ -151,11 +116,10 @@ export function Game({ players, newGame, serverUrl, numJugadores, gameId,
         <Chat url={chatUrl} msgHistory={msgH} setMsgHistory={setMsgH} username={username}/>
       </div>
     );
-  }
 }
 
 function handleMenssage(
-  players,
+  playerNames,
   raw_message,
   setPlayernames,
   setHand,
@@ -171,6 +135,7 @@ function handleMenssage(
   username,
   numJugadores,
   setWinners,
+  setMensajeCanta
 ) {
   let message;
   try {
@@ -202,13 +167,17 @@ function handleMenssage(
     navigate("/winners")
   }
 
-  if (message["Jugador"] !== undefined) {
+  if (message["Jugador"] !== undefined && message["Canta"] === undefined) {
     playerLocation = message["Jugador"];
     console.log(message["Jugador"]);
   }
 
   if (message["Ganador"] !== undefined) {
     setTrumpWinner(message["Ganador"]);
+  }
+
+  if (message["Canta"] !== undefined && ["20", "40"].includes(message["Canta"]) && ["oro", "basto", "espada", "copa"].includes(message["Palo"]) && [0, 1, 2, 3].includes(message["Jugador"])) {
+    setMensajeCanta("canta " + message["Canta"] + " en " + message["Palo"] + "s")
   }
 
   if (message === "Arrastre") {

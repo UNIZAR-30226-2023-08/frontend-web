@@ -70,7 +70,7 @@ export function Hand({ hand, onPlay, allowed, myTurn = false, cambiar7Permitido 
   );
 }
 
-export function Played({ playedCards, playerNames, trumpWinner }) {
+export function Played({ playedCards, playerNames, trumpWinner, mensajeCanta, setMensajeCanta }) {
   console.log(`TW: ${trumpWinner}`)
   function placeCard(key) {
     switch (key) {
@@ -116,14 +116,16 @@ export function Played({ playedCards, playerNames, trumpWinner }) {
 
   const [showAlert, setShowAlert] = useState(false);
   useEffect(() => {
-    if (trumpWinner !== "") {
+    if (trumpWinner && !showAlert) {
       setShowAlert(true);
       setTimeout(() => {
         setShowAlert(false);
+        setMensajeCanta(null)
       }, 3000);
     }
-  }, [trumpWinner]);
+  }, [trumpWinner, mensajeCanta]);
   
+  console.log(playerNames)
 
   return (
     <>
@@ -133,7 +135,7 @@ export function Played({ playedCards, playerNames, trumpWinner }) {
       {showAlert && (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800 text-white rounded-lg p-4">
         <p className="text-lg font-semibold">
-          Ganador de la baza: {trumpWinner}</p>
+          Ganador de la baza: {playerNames["j" + trumpWinner]} {mensajeCanta && "y " + mensajeCanta}</p>
         </div>
        )}
     </>
