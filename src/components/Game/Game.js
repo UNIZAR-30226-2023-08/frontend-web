@@ -71,7 +71,8 @@ export function Game({ newGame, serverUrl, numJugadores, gameId,
         username,
         numJugadores,
         setWinners,
-        setMensajeCanta
+        setMensajeCanta,
+        setCambiar7Permitido
       );
     };
 
@@ -136,7 +137,8 @@ function handleMenssage(
   username,
   numJugadores,
   setWinners,
-  setMensajeCanta
+  setMensajeCanta,
+  setCambiar7Permitido
 ) {
   let message;
   try {
@@ -186,16 +188,15 @@ function handleMenssage(
   }
 
   if (message["Cambiar7"] !== undefined && message["Cambiar7"] === true) {
-      console.log("Cambiar7 message received with value true");
-      setCambiar7Permitido(true);
-      return
-    }
+    setCambiar7Permitido(true);
+    return
+  }
     
-    if (message["Cambiado"] !== undefined && [1, 2, 3, 4].includes(message["Cambiado"])) {
-      setCambiar7Permitido(false);
-      console.log("Cambiado message received with value " + message["Cambiado"]);
-      return;
-      }
+  if (message["Cambiado"] !== undefined && [1, 2, 3, 4].includes(message["Cambiado"])) {
+    setCambiar7Permitido(false);
+    console.log("Cambiado message received with value " + message["Cambiado"]);
+    return;
+  }
 
   if (message["Cartas"] !== undefined) {
     console.log("Cartas " + state);

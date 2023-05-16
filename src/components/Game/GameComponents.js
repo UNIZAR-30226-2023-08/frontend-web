@@ -59,10 +59,10 @@ export function Hand({ hand, onPlay, allowed, myTurn = false, cambiar7Permitido,
       <button
         onClick={() => onChange7()}
         className={`ml-5 bg-primary-500 text-neutral-100 font-bold py-2 px-4 rounded-full ${
-          !(cambiar7Permitido) &&
+          (!cambiar7Permitido) &&
           "opacity-50 cursor-not-allowed  hover:bg-primary-700"
         }`}
-        disabled={!(cambiar7Permitido)}
+        disabled={!cambiar7Permitido}
       >
         Cambiar 7
       </button>
