@@ -70,7 +70,7 @@ export function Hand({ hand, onPlay, allowed, myTurn = false, cambiar7Permitido,
   );
 }
 
-export function Played({ playedCards, playerNames, trumpWinner, mensajeCantar }) {
+export function Played({ playedCards, playerNames, trumpWinner, mensajeCanta, setMensajeCanta }) {
   console.log(`TW: ${trumpWinner}`)
   function placeCard(key) {
     switch (key) {
@@ -116,45 +116,16 @@ export function Played({ playedCards, playerNames, trumpWinner, mensajeCantar })
 
   const [showAlert, setShowAlert] = useState(false);
   useEffect(() => {
-    if (trumpWinner !== null) {
+    if (trumpWinner && !showAlert) {
       setShowAlert(true);
       setTimeout(() => {
         setShowAlert(false);
+        setMensajeCanta(null)
       }, 3000);
     }
-  }, [trumpWinner]);
-
-  const[showAlertCanta, setShowAlertCanta] = useState(false);
-  const [nuevoMensajeCantar, setNuevoMensajeCantar] = useState("");  
+  }, [trumpWinner, mensajeCanta]);
   
-  useEffect(() => {
-    if(mensajeCantar !== ""){
-      setShowAlertCanta(true);const jugadores = [0, 1, 2, 3];
-
-      // Variable para almacenar el nuevo mensaje
-      let nuevoMensajeCantar = mensajeCantar;
-      
-      // Iteramos sobre cada número de jugador y realizamos la sustitución
-      for (let i = 0; i < jugadores.length; i++) {
-        const jugadorActual = jugadores[i];
-        // Verificamos si el número de jugador está presente en la cadena
-        if (nuevoMensajeCantar.includes("jugador " + jugadorActual)) {
-          nuevoMensajeCantar = nuevoMensajeCantar.replace(
-            "jugador " + jugadorActual,
-            playerNames["j" + trumpWinner]
-          );   
-          // Salimos del bucle una vez que se ha realizado la sustitución
-          break;
-        }
-      }
-      // Actualizamos el estado con el nuevo mensaje
-      setNuevoMensajeCantar(nuevoMensajeCantar);
-      setTimeout(() => {
-        setShowAlertCanta(false);
-      }, 3000);
-    }
-  }, [mensajeCantar]);
-  
+  console.log(playerNames)
 
   return (
     <>
@@ -163,16 +134,8 @@ export function Played({ playedCards, playerNames, trumpWinner, mensajeCantar })
       </div>
       {showAlert && (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800 text-white rounded-lg p-4">
-          <p className="text-lg font-semibold">
-            {playerNames["j" + trumpWinner]} ganó la baza.
-          </p>
-        </div>
-       )}
-      {showAlertCanta && (
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800 text-white rounded-lg p-4">
-          <p className="text-lg font-semibold">
-           {nuevoMensajeCantar} y {playerNames["j" + trumpWinner]} ganó la baza.
-          </p>
+        <p className="text-lg font-semibold">
+          Ganador de la baza: {playerNames["j" + trumpWinner]} {mensajeCanta && "y " + mensajeCanta}</p>
         </div>
       )}
     </>
