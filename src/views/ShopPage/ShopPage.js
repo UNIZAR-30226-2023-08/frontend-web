@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ShopCard } from "../../components/Cards/ShopCard";
-import { BACKEND_URL, MY_STATS_ENDPOINT, SHOP_ENDPOINT } from "../../config";
+import { BACKEND_URL, MY_STATS_ENDPOINT, PROTOCOL, SHOP_ENDPOINT } from "../../config";
 
 export function ShopPage({ username, setCurrentTheme, currentTheme }) {
   const [items, setItems] = useState([]);
@@ -10,7 +10,7 @@ export function ShopPage({ username, setCurrentTheme, currentTheme }) {
   const newPurchase = () => setItemPurchased(purchased + 1);
 
   useEffect(() => {
-    fetch("http://" + BACKEND_URL + SHOP_ENDPOINT + `?username=${username}`, {
+    fetch(PROTOCOL + BACKEND_URL + SHOP_ENDPOINT + `?username=${username}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
@@ -18,7 +18,7 @@ export function ShopPage({ username, setCurrentTheme, currentTheme }) {
       .then((response) => response.json())
       .then((data) => setItems(data));
 
-    fetch("http://" + BACKEND_URL + MY_STATS_ENDPOINT, {
+    fetch(PROTOCOL + BACKEND_URL + MY_STATS_ENDPOINT, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },

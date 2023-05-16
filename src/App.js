@@ -19,7 +19,7 @@ function App() {
   document.body.classList.add("bg-gray-200");
   document.body.classList.add("dark:bg-gray-600");
 
-  const [currentTheme, setCurrentTheme] = useState("classic");
+  const [currentTheme, setCurrentTheme] = useState("default");
   const [serverUrl, setServerUrl] = useState(BACKEND_URL);
   const [newGame, setNewGame] = useState(0);
   const [gameId, setGId] = useState(null);

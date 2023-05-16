@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { BACKEND_URL } from "../../config";
+import { BACKEND_URL, PROTOCOL } from "../../config";
 import { Link } from "react-router-dom";
 
 
 async function obtenerRankingUsuarios(limiteLista) {
-  const url = `http://${BACKEND_URL}/ranking?limite_lista=${limiteLista}`;
+  const url = `${PROTOCOL}${BACKEND_URL}/ranking?limite_lista=${limiteLista}`;
   console.log("El url es --> " + url);
   const options = {
     method: 'GET',

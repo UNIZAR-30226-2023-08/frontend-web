@@ -144,6 +144,8 @@ export function Played({ playedCards, playerNames, trumpWinner, mensajeCanta, se
 
 export function Deck({ triunfo, show }) {
   const theme = useContext(ThemeContext);
+  console.log("Mostrar deck: " + show)
+  console.log("Mostrar deck: " + triunfo)
   return (
     <div
       className={
@@ -153,7 +155,8 @@ export function Deck({ triunfo, show }) {
       }
     >
       <img
-        className={`sm:max-h-[150px] lg:max-h-[200px] ${triunfo || "hidden"}`}
+        // className={`sm:max-h-[150px] lg:max-h-[200px] ${triunfo || "hidden"}`}
+        className={`sm:max-h-[150px] lg:max-h-[200px]`}
         src={theme.dorso}
       ></img>
       <img

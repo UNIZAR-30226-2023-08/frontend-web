@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
-import { BACKEND_URL, CREATE_PRIVATE_GAME_ENDPOINT } from "../../config";
+import { BACKEND_URL, CREATE_PRIVATE_GAME_ENDPOINT, PROTOCOL } from "../../config";
 
 export default function ContenedorPartidaPrivada({
   startNewGame,
@@ -26,7 +26,7 @@ export default function ContenedorPartidaPrivada({
                     focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg mb-6"
           onClick={() => {
             fetch(
-              "http://" + BACKEND_URL + CREATE_PRIVATE_GAME_ENDPOINT + seleccion,
+              PROTOCOL + BACKEND_URL + CREATE_PRIVATE_GAME_ENDPOINT + seleccion,
               {
                 method: "POST",
               }

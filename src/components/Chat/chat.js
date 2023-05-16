@@ -24,7 +24,7 @@ export function Chat({ url, msgHistory, setMsgHistory, username }) {
 
     try {
       console.log(`chatUrl ${url}`);
-      socket = new WebSocket(`ws://${url}`);
+      socket = new WebSocket(`wss://${url}`);
 
       socket.onopen = () => {
         console.log(`CHAT OK: ${username} connected to ${url}`);

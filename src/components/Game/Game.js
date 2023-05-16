@@ -43,7 +43,7 @@ export function Game({ newGame, serverUrl, numJugadores, gameId,
   useEffect(() => {
     console.log(`serverUrl ${serverUrl}`);
     // var str = `ws://${BACKEND_URL}/partida4/${username}`;
-    var str = `ws://${serverUrl}`;
+    var str = `wss://${serverUrl}`;
     socket = new WebSocket(str);
     state = "Espera";
     console.log("Esperando");
@@ -99,7 +99,7 @@ export function Game({ newGame, serverUrl, numJugadores, gameId,
 
     return (
       <div className="grid h-screen grid-rows-[1fr_3fr_1fr] grid-cols-[1fr 1fr 1fr 1fr]">
-        <Deck triunfo={triunfo} show={!arrastre} />
+        <Deck triunfo={triunfo} show={(numJugadores === 3) || !arrastre} />
         <Played
           playedCards={playedCards}
           playerNames={playerNames}
@@ -206,10 +206,14 @@ function handleMenssage(
     if (state === "Nuevas" || state === "Vueltas") {
       setAllowed(message["Cartas"]);
     }
+    if (numJugadores == 3 && message["Triunfo"] !== undefined) {
+      setTriunfo(message["Triunfo"].join(""))
+    }
+
   } else if (message["Triunfo"] !== undefined) {
     if (message["Triunfo"] !== null) {
       setTriunfo(message["Triunfo"].join(""));
-    } else {
+    } else if (numJugadores != 3) {
       setTriunfo(null);
     }
     setTurn(message["Turno"]);

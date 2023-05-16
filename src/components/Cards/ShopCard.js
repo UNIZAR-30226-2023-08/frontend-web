@@ -1,4 +1,4 @@
-import { BACKEND_URL, PURCHASE_SKIN_ENDPOINT } from "../../config";
+import { BACKEND_URL, PROTOCOL, PURCHASE_SKIN_ENDPOINT } from "../../config";
 
 export function ShopCard({
   name,
@@ -22,7 +22,7 @@ export function ShopCard({
             setCurrentTheme(name);
           } else {
             fetch(
-              "http://" + BACKEND_URL + PURCHASE_SKIN_ENDPOINT + '?' + new URLSearchParams({username: username, baraja: name}),
+              PROTOCOL + BACKEND_URL + PURCHASE_SKIN_ENDPOINT + '?' + new URLSearchParams({username: username, baraja: name}),
               {
                 headers: {
                   Authorization: `Bearer ${localStorage.getItem("access_token")}`,

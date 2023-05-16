@@ -2,7 +2,7 @@ import { Formik, Form } from "formik";
 import { Link, useNavigate } from "react-router-dom";
 import { MyCheckbox, MyTextInput } from "../../components/Forms/forms";
 import * as Yup from "yup";
-import { BACKEND_URL, REGISTER_ENDPOINT } from "../../config";
+import { BACKEND_URL, PROTOCOL, REGISTER_ENDPOINT } from "../../config";
 
 /**
  * Componente formulario de registro.
@@ -46,7 +46,7 @@ export function RegisterPage() {
           //   .required("Required"),
         })}
         onSubmit={(values) => {
-          fetch('http://' + BACKEND_URL + REGISTER_ENDPOINT, {
+          fetch(PROTOCOL + BACKEND_URL + REGISTER_ENDPOINT, {
             method: "POST",
             mode: "cors",
             body: JSON.stringify(values, null, 2),

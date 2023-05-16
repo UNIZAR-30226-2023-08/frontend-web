@@ -4,7 +4,7 @@ import { MyCheckbox, MyTextInput } from "../../components/Forms/forms";
 import * as Yup from "yup";
 import { BeatLoader } from "react-spinners";
 import { useState } from "react";
-import { BACKEND_URL, LOGIN_ENDPOINT } from "../../config";
+import { BACKEND_URL, LOGIN_ENDPOINT, PROTOCOL } from "../../config";
 
 export function LoginPage({ setUsername }) {
   const [isLoading, setLoading] = useState(false);
@@ -31,7 +31,7 @@ export function LoginPage({ setUsername }) {
           const params = new URLSearchParams();
           params.append("username", values["username"]);
           params.append("password", values["password"]);
-          fetch("http://" + BACKEND_URL + LOGIN_ENDPOINT, {
+          fetch(PROTOCOL + BACKEND_URL + LOGIN_ENDPOINT, {
             method: "POST",
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
