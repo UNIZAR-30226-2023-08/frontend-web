@@ -70,7 +70,7 @@ export function Hand({ hand, onPlay, allowed, myTurn = false, cambiar7Permitido,
   );
 }
 
-export function Played({ playedCards, playerNames, trumpWinner, mensajeCanta, setMensajeCanta }) {
+export function Played({ playedCards, playerNames, trumpWinner, mensajeCanta, setMensajeCanta, puntos }) {
   console.log(`TW: ${trumpWinner}`)
   function placeCard(key) {
     switch (key) {
@@ -126,6 +126,8 @@ export function Played({ playedCards, playerNames, trumpWinner, mensajeCanta, se
   }, [trumpWinner, mensajeCanta]);
   
   console.log(playerNames)
+
+  useEffect(() => console.log("Puntos vueltas: " + puntos), [puntos])
 
   return (
     <>

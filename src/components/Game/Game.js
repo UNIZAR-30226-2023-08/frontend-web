@@ -36,6 +36,7 @@ export function Game({ newGame, serverUrl, numJugadores, gameId,
   const [trumpWinner, setTrumpWinner] = useState(null);
   const [cambiar7Permitido, setCambiar7Permitido] = useState(false);
   const [mensajeCanta, setMensajeCanta] = useState(null);
+  const [puntos, setPuntos] = useState([]);
   const navigate = useNavigate();
 
   const [msgH, setMsgH] = useState([]);
@@ -72,7 +73,8 @@ export function Game({ newGame, serverUrl, numJugadores, gameId,
         numJugadores,
         setWinners,
         setMensajeCanta,
-        setCambiar7Permitido
+        setCambiar7Permitido,
+        setPuntos
       );
     };
 
@@ -106,6 +108,7 @@ export function Game({ newGame, serverUrl, numJugadores, gameId,
           trumpWinner={trumpWinner}
           mensajeCanta={mensajeCanta}
           setMensajeCanta={setMensajeCanta}
+          puntos={puntos}
         />
         <Hand
           hand={hand}
@@ -138,7 +141,8 @@ function handleMenssage(
   numJugadores,
   setWinners,
   setMensajeCanta,
-  setCambiar7Permitido
+  setCambiar7Permitido,
+  setPuntos
 ) {
   let message;
   try {
@@ -164,6 +168,9 @@ function handleMenssage(
 
   if(message["Ganador Partida"] === null) {
     state = "Vueltas"
+    delete message["Ganador Partida"]
+    setPuntos(message)
+
   } else if (message["Ganador Partida"] !== undefined){ 
     console.log("Winners")
     setWinners(message["Ganador Partida"]) 

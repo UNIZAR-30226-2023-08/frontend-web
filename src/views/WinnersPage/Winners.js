@@ -4,7 +4,7 @@ export function Winners({ players, winners }) {
   const winnerNames = [];
 
   if (winners.constructor !== Array) {
-    winnerNames = [players["j" + winners]]
+    winnerNames.push(players["j" + winners])
   }
 
   for (var index in winners) {
