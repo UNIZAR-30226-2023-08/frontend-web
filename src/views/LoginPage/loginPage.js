@@ -41,7 +41,7 @@ export function LoginPage({ setUsername }) {
             .then((response) => {
               if (!response.ok) {
                 console.log(response);
-                alert("Acceso no permitido"); //TODO poner bonito
+                alert("Acceso no permitido");
                 throw new Error("Acceso no permitido");
               } else {
                 console.log(response);

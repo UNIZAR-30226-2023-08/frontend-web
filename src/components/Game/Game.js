@@ -241,7 +241,6 @@ function handleMenssage(
       setAllowed(message["Cartas Posibles"]);
     }
   }
-  //TODO mensaje ganador baza
 }
 
 function playCard(card) {
