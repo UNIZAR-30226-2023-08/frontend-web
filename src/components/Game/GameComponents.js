@@ -134,11 +134,11 @@ export function Played({
 
   const [showAlert, setShowAlert] = useState(false);
   useEffect(() => {
-    if (trumpWinner && !showAlert) {
+    if (trumpWinner !== null && !showAlert) {
       setShowAlert(true);
       setTimeout(() => {
         setShowAlert(false);
-        setMensajeCanta(null);
+        setMensajeCanta(null); 
       }, 3000);
     }
   }, [trumpWinner, mensajeCanta]);
@@ -150,20 +150,17 @@ export function Played({
     <>
       <div className="grid grid-rows-3 grid-cols-3 col-start-2 col-end-2 row-start-2">
         {cards}
-      </div>
-      {showAlert && (
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800 text-white rounded-lg p-4">
-          <p className="text-lg font-semibold">
-            Ganador de la baza: {playerNames["j" + trumpWinner]}{" "}
-            {mensajeCanta && "y " + mensajeCanta}
-            {(puntos !== undefined || puntos !== null) && Object.keys(puntos).map((key) => {
-              <span>{playerNames["j" + key] + " " + puntos[key]}</span>;
-            })}
-          </p>
         </div>
-      )}
-    </>
-  );
+        {showAlert && trumpWinner !== null &&(
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800 text-white rounded-lg p-4">
+            <p className="text-lg font-semibold">
+              Ganador de la baza: {playerNames["j" + trumpWinner]}{" "}
+              {mensajeCanta !== null ? (mensajeCanta && "y " + mensajeCanta) : ""}
+            </p>
+          </div>
+        )}
+      </>
+    );
 }
 
 export function Deck({ triunfo, arrastre, numJugadores }) {
